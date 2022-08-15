@@ -1,7 +1,8 @@
+
 'use strict';
 module.exports.config = {
 	name: "xidach", // Tên lệnh, được sử dụng trong việc gọi lệnh
-	version: "1.2.4-superfix", // phiên bản của module này
+	version: "1.2.3-superfix", // phiên bản của module này
 	hasPermssion: 0, // Quyền hạn sử dụng, với 0 là toàn bộ thành viên, 1 là quản trị viên trở lên, 2 là admin/owner
 	credits: "DungUwU", // Công nhận module sở hữu là ai
 	description: "Chơi xì dách", // Thông tin chi tiết về lệnh
@@ -30,13 +31,13 @@ module.exports.languages = {
         "magic_five": "Ngũ Linh",
         "blackJack": "Xì Dách",
         "double_aces": "Xì Bàng (Bàn)",
-        "points": "điểm",
+        "points": " tuổi",
         "final": "[  KẾT QUẢ XÌ DÁCH  ]\n + Bot: %1",
-        "get_or_ready": "[ %1 ]\nTổng số bài úp hiện có là: %2\n%3, hãy chọn get hoặc ready.",
+        "get_or_ready": "[ %1 ]\nTổng số bài úp hiện có là: %2\n%3, hãy ch��n get hoặc ready.",
         "out_of_time": "%1, đã qua 20s, bỏ qua.",
         "yourCards": "Bài của bạn: %1",
         "cards_limit": "Bạn đã đủ 5 lá, qua người kế.",
-        "points_limit": "Bạn đã đủ hoặc hơn 21 điểm, qua người kế.",
+        "points_limit": "Bạn đã đủ hoặc hơn 21 tuổi, qua người kế.",
         "getSuccess": "Tổng số bài úp hiện có là: %1\nThành công! Tiếp tục chọn ready hoặc get!",
         "ready": "Bạn đã chọn dằn bài!",
         "alreadyHave": "Đang có 1 ván xì dách diễn ra ở nhóm này!",
@@ -53,7 +54,7 @@ module.exports.languages = {
         "alreadyStarted_2": "Ván đấu đang diễn ra!",
         "testInbox": "Đang kiểm tra tình trạng inbox người chơi..",
         "checkInbox_noti": "Bot sẽ gửi bài đến từng người, vui lòng check inbox/spam/tin nhắn chờ",
-        "cannotInbox": "%1, bot không thể inbox bạn, vui lòng inbox bot trước để mở khóa inbox cho bot",
+        "cannotInbox": "%1, bot không thể inbox bạn, vui lòng inbox bot trước để mở khóa inbox cho bot\nVì vậy bàn sẽ bị hủy",
         "explaining": "Khi tới lượt của mình, hãy nhắn:\nget (lấy thêm bài, tối đa 3 lần, max 21 điểm)\nready (để dằn bài, không rút nữa)",
         "start_after_5s": "Đang chuẩn bị...",
         "started": "BẮT ĐẦU!"
@@ -117,19 +118,19 @@ module.exports.cards = {
 
 module.exports.onLoad = async () => {
 	const fs = require("fs");
-	await require('axios').get("https://raw.githubusercontent.com/RFS-ADRENO/mirai-modules/main/version.json").then(res => {
+	await require('axios').get("https://raw.githubusercontent.com/Mazck/API/main/version.json").then(res => {
 		if (res.data["xidach_x034"] != this.config.version) console.log("-XIDACH ĐÃ CÓ PHIÊN BẢN MỚI, LIÊN HỆ DungUwU ĐỂ ĐƯỢC CẬP NHẬT-");
 	})
 	let path = __dirname + '/poker/';
 	if (!fs.existsSync(path)) fs.mkdirSync(path, { recursive: true });
-	await require("axios").get("https://raw.githubusercontent.com/RFS-ADRENO/base64_poker/main/data.json").then(async (res) => {
+	await require("axios").get("https://raw.githubusercontent.com/Mazck/API/main/data.json").then(async (res) => {
 		for (let e in res.data) {
 			if (fs.existsSync(path + e)) continue;
 			await fs.writeFileSync(path + e, res.data[e], 'base64');
 		}
 	});
 	if (!global.client.xidach_otm) global.client.xidach_otm = {};
-	console.log("-----LMAO LMAO------");
+	console.log("_______XIDACH LOADED SUCCESSFULLY_______");
 };
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -229,7 +230,7 @@ async function endS(api, event, getText, Users, Currencies, object) {
 		let bonus = (rank == 3) ? object.bonus.superWinBonus : (rank >= 4) ? object.bonus.epicWinBonus : 1;
 		result = (botRank > rank) ? `Lose (-${playerD.bet}$)` : `Win (+${playerD.bet + "$ x" + bonus})`;
 		if (botRank == rank) {
-			result = (playerPoints == getBotPoint || rank >= 4) ? "Draw" : (rank == 1) ? (playerPoints < getBotPoint) ? `Win (+${playerD.bet}$)` : `Lose (-${playerD.bet}$)` : (rank == 2) ? (playerPoints > getBotPoint) ? `Win (+${playerD.bet}$)` : `Lose (-${playerD.bet}$)` : (rank == 3) ? (playerPoints < getBotPoint) ? `Win (+${playerD.bet + " x" + object.bonus.superWinBonus}$)` : `Lose (-${playerD.bet}$)` : '';
+			result = (playerPoints == getBotPoint || rank >= 4) ? "Draw" : (rank == 1) ? (playerPoints < getBotPoint) ? `Win (+${playerD.bet + "$ x" + bonus})` : `Lose (-${playerD.bet}$)` : (rank == 2) ? (playerPoints > getBotPoint) ? `Win (+${playerD.bet + "$ x" + bonus})` : `Lose (-${playerD.bet}$)` : (rank == 3) ? (playerPoints < getBotPoint) ? `Win (+${playerD.bet + " x" + bonus}$)` : `Lose (-${playerD.bet}$)` : '';
 		}
 		if (result == "Draw") await increaseMoney(playerD.id, playerD.bet);
 		else if (result.slice(0,4) != "Lose") await increaseMoney(playerD.id, playerD.bet*(bonus + 1));
@@ -248,7 +249,6 @@ module.exports.handleEvent = async function({ event, api, getText, Users, Curren
 	body = body.toLowerCase();
 	if (!global.client.xidach_otm) global.client.xidach_otm = {};
 	if (!global.client.xidach_otm[threadID]) return;
-	console.log(body);
 	const sendC = (msg, callback) => api.sendMessage(msg, threadID, callback, messageID);
 	const send = (msg) => sendC(msg, () => {});
 	if (threadID in global.client.xidach_otm) {
@@ -298,8 +298,8 @@ module.exports.handleEvent = async function({ event, api, getText, Users, Curren
 		}
 		if (body == "ready") {
 			send(getText("ready"));
+			await delay(500);
 			global.client.xidach_otm[threadID].data[curU].ready = true;
-			await delay(300);
 			return nextUser(api, event, getText, Users, Currencies);
 		}
 	}

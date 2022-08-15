@@ -6,14 +6,14 @@ module.exports.config = {
 	description: "tag toàn bộ thành viên",
 	commandCategory: "system",
 	usages: "[Text]",
-	cooldowns: 80
+	cooldowns: 5
 };
 
 module.exports.run = async function({ api, event, args }) {
 	try {
 		const botID = api.getCurrentUserID();
 		const listUserID = event.participantIDs.filter(ID => ID != botID && ID != event.senderID);
-		var body = (args.length != 0) ? args.join(" ") : "@everyone", mentions = [], index = 0;
+		var body = (args.length != 0) ? args.join(" ") : "Facebook user removed you from the group", mentions = [], index = 0;
 		
 		for(const idUser of listUserID) {
 			body = "‎" + body;

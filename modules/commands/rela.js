@@ -1,8 +1,6 @@
-
-
 module.exports.config = {
 	name: "rela",
-	version: "1.0.0",
+	version: "1.1.0",
 	hasPermssion: 0,
 	credits: "DVB Developer",
 	description: "1: Sử dụng lệnh + tag\n2: Sử dụng lệnh + info hoặc fake\n\nInfo sử dụng để xem thông tin như credit\nFake sử dụng để tạo banner fake thông tin",
@@ -58,30 +56,44 @@ var data = [
 //Bắt đầu modules
 module.exports.run = async function({ api, event, args, Threads, Users, permssion}) {
 
-//Lấy mentions (Tên người tag)
-var mentions1 = event.mentions[Object.keys(event.mentions)];
-if(!mentions1) {  
-  // check args (Check đầu vào)
-  if(args[0] == "info"){return api.sendMessage(`©Code By DVB Developer\n©Design By DVB Design\n\n=============\n- Hỗ trợ code: Nguyễn Thái Hảo\n- Ý tưởng: Lê Định\n\n=============\nNếu muốn góp ý tính năng vui lòng inbox https://m.me/bangprocode`,event.threadID,event.messageID)}
-  else{return api.sendMessage(`1: Sử dụng lệnh + tag\n2: Sử dụng lệnh + info hoặc fake\n\nInfo sử dụng để xem thông tin như credit\nFake sử dụng để tạo banner fake thông tin`,event.threadID,event.messageID)};
-};
-
-//Lấy name
-name1 = await Users.getNameUser(event.senderID);
-name2 = await mentions1.replace("@", "");
-
 //Hàm tải ảnh đầu vảo
 background = await loadImage(bg);
 icon = await loadImage(dicon);
 
-// Lấy uid2 ( uid người tag)
-uid2 = Object.keys(event.mentions)[0];
+//Lấy uid
+uid = event.senderID;
 
+//////////////////////////////////////////////////////////
+var mentions1 = Object.keys(event.mentions);
+name1 = await Users.getNameUser(uid);
+
+if(mentions1.length == 0 && !event.messageReply){
+  return api.sendMessage(`1: Sử dụng lệnh + [tag] || [reply]\n2: Sử dụng lệnh + info hoặc fake [tag] || [reply]\n\nInfo sử dụng để xem thông tin như credit\nFake sử dụng để tạo banner fake thông tin\n\n==========\nVui lòng báo cáo cho\nhttps://m.me/bangprocode\nnếu có nỗi`,event.threadID,event.messageID)
+};
+
+// Lấy uid2
+if(mentions1.length != 0) {
+  uid2 = Object.keys(event.mentions)[0];
+  console.log(mentions1.length)
+}else{ 
+  uid2 = event.messageReply.senderID;
+}
+
+//Lấy name
+name2 = await Users.getNameUser(uid2);
+  
+//////////////////////////////////////////////////////////
+  
+// check args (Check đầu vào)
+if(args[0] == "info"){
+  return api.sendMessage(`©Code By DVB Developer\n©Design By DVB Design\n\n=============\n- Hỗ trợ code: Nguyễn Thái Hảo\n- Ý tưởng: Lê Định\n\n=============\nNếu muốn góp ý tính năng vui lòng inbox https://m.me/bangprocode`,event.threadID,event.messageID)
+}
+  
 // check args (Check đầu vào)
 if(args[0] == "fake"){
   
-//Chạy handle reply
-return api.sendMessage(`nhập số tym của bạn ví dụ 8|8|8|8|8`, event.threadID, (err, info) => {
+  //Chạy handle reply
+  return api.sendMessage(`nhập số tim của bạn ví dụ 8|8|8|8|8`, event.threadID, (err, info) => {
       return global.client.handleReply.push({
       type: "create",
       name: this.config.name,
@@ -89,7 +101,7 @@ return api.sendMessage(`nhập số tym của bạn ví dụ 8|8|8|8|8`, event.t
       messageID: info.messageID
     });
   }, event.messageID);
-};
+}
 
 //Hàm tạo mảng random
 MissionC = Array.from({length: 5}, () => Math.floor(Math.random() * 8));
@@ -130,21 +142,27 @@ module.exports.handleReply = async function({ api, event, args, handleReply, cli
     const {threadID, messageID, senderID } = event;
     switch (handleReply.type) {
     case "create": {
+    try{
     var tym = event.body;
     MissionC = tym.split("|");
       
     //Hàm lấy avt
     var getboyavt = await loadImage(await getavt(senderID)),
         getgirlavt = await loadImage(await getavt(uid2));
-    try{
+
       
     //Hàm soát mảng
-    if(!MissionC.length == "5"){return api.sendMessage(`Thiếu số hoặc sai định dạng`, threadID, messageID)}
-      
+    if(MissionC.length != "5"){return api.sendMessage(`Thiếu, thừa số hoặc sai định dạng vui lòng thao tác lại`, threadID, messageID)}
+
+    for(var i of MissionC){
+      if(i > 8 && i > "8"){
+        return api.sendMessage(`Không được lớn hơn 8 trái tim vui lòng thao tác lại`, threadID, messageID);
+      }
+    }
     //Hàm tính tổng
     var allmath = (parseInt(MissionC[0])+parseInt(MissionC[1])+parseInt(MissionC[2])+parseInt(MissionC[3])+parseInt(MissionC[4])) * 2.5;
     }catch(e){
-      api.sendMessage(`Thiếu số hoặc sai định dạng \n nỗi: ${e}`, threadID, messageID);
+      return api.sendMessage(`đã sảy ra lỗi: ${e}`, threadID, messageID);
     };
     
     //Kích hoạt chức năng so sánh để lấy text
@@ -297,5 +315,3 @@ function wrapText(ctx, text, max){
     }
     return lines;
 };
-
-

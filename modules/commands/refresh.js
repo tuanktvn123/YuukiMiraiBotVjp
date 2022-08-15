@@ -1,17 +1,16 @@
 module.exports.config = {
-  name: "refresh",
-  version: "1.0.0",
-  hasPermssion: 1,
-  credits: "MintDaL",
-  description: "Làm mới dữ liệu thành viên nhóm",
-  commandCategory: "group",
-  cooldowns: 5,
+	name: "refresh",
+	version: "0.0.1",
+	hasPermssion: 0,
+	credits: "Mirai Team",
+	description: "Load lại toàn bộ thông tin của nhóm",
+	commandCategory: "system",
+	cooldowns: 500
 };
 
-module.exports.run = async function ({ api, event, Threads }) {
-  const { threadID, messageID } = event;
-  const threadInfo = await api.getThreadInfo(threadID);
-  await Threads.setData(threadID, { name: threadInfo.name, threadInfo });
-  global.data.threadInfo.set(threadID, threadInfo);
-  return api.sendMessage(`Đã làm mới lại thông tin của nhóm thành công!`, threadID, messageID);
+module.exports.run = async ({ event, api, Threads }) => {
+    const threadInfo = await api.getThreadInfo(event.threadID);
+	await Threads.setData(event.threadID, { name: threadInfo.name, threadInfo });
+	global.data.threadInfo.set(parseInt(event.threadID), threadInfo);
+    return api.sendMessage("Đã làm mới lại thông tin của nhóm thành công!", event.threadID, event.messageID);
 }

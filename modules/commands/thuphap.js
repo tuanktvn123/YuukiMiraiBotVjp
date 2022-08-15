@@ -8,11 +8,11 @@ module.exports.config = {
 
  credits: "D-jukie, DuyVuong, ChinhLe",
 
- description: "Viết thư pháp",
+ description: "Canvas thoi ma?",
 
- commandCategory: "Tạo ảnh",
+ commandCategory: "image",
 
- usages: "[0 -> 3] | [ 1 -> 3 ] | [Text 1] | [Text 2] | [Text 3]",
+ usages: "[0 -> 3] | [ 1 -> 3 ] | [Text] | [Text 2]",
 
  cooldowns: 5
 
@@ -46,7 +46,7 @@ module.exports.run = async ({ event, api, args }) => {
 
     const __root = path.resolve(__dirname, "cache");
 
-    if(!args[0]) return api.sendMessage('Sai cú pháp\n[0 -> 3] | [ 1 -> 3 ] | [Text 1] | [Text 2] | [Text 3]', threadID, messageID);
+    if(!args[0]) return api.sendMessage('Sai cú pháp\n[0 -> 3] | [ 1 -> 3 ] | [Text] | [Text 2]', threadID, messageID);
 
     /*------------------------Background-----------------------*/
 
@@ -199,4 +199,9 @@ module.exports.run = async ({ event, api, args }) => {
      threadID,messageID
 
    );
+
+   /* CODER ĐƯỢC CODE BY D-JUKIE VÀ CÁI NÀY ĐƯỢC CODE TRÊN LAWERBOT ĐƯỢC COVER BY DUYVUONG (ADMIN PR0JECT LAWERBOT) */
+
+   /* xin vĩnh biệt cụ nào de/leak code bọn t:)) */
+
 }

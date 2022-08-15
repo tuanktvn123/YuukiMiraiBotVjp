@@ -36,9 +36,9 @@ const { threadID, messageID, mentions } = event;
         const { adminbox } = database;   
         if (adminbox[threadID] == true) {
             adminbox[threadID] = false;
-            api.sendMessage("» Tắt thành công chế độ admin (tất cả mọi người đều có thể sử dụng bot)", threadID, messageID);
+            api.sendMessage("» Tắt thành công chế độ qtvonly (tất cả mọi người đều có thể sử dụng bot)", threadID, messageID);
         } else {
             adminbox[threadID] = true;
-            api.sendMessage("» Bật thành công chế độ admin (chỉ admin box mới có thể sử dụng bot)", threadID, messageID);
+            api.sendMessage("» Bật thành công chế độ qtvonly (chỉ admin với qtv box mới có thể sử dụng bot)", threadID, messageID);
         }
 }

@@ -1,10 +1,15 @@
+/**
+* @author ProCoderMew
+* @warn Do not edit code or edit credits
+*/
+
 module.exports.config = {
     name: "namtay",
     version: "2.0.0",
     hasPermssion: 0,
-    credits: "ProCoderMew",
+    credits: "DinhPhuc",
     description: "",
-    commandCategory: "Game",
+    commandCategory: "general",
     usages: "[tag]",
     cooldowns: 5,
     dependencies: {
@@ -22,7 +27,7 @@ module.exports.onLoad = async() => {
     const dirMaterial = __dirname + `/cache/canvas/`;
     const path = resolve(__dirname, 'cache/canvas', 'namtay.png');
     if (!existsSync(dirMaterial + "canvas")) mkdirSync(dirMaterial, { recursive: true });
-    if (!existsSync(path)) await downloadFile("https://imgur.com/vcG4det.jpg", path);
+    if (!existsSync(path)) await downloadFile("https://i.imgur.com/svN1mgV.png", path);
 }
 
 async function makeImage({ one, two }) {
@@ -37,10 +42,10 @@ async function makeImage({ one, two }) {
     let avatarOne = __root + `/avt_${one}.png`;
     let avatarTwo = __root + `/avt_${two}.png`;
     
-    let getAvatarOne = (await axios.get(`https://graph.facebook.com/${one}/picture?height=720&width=720&access_token=170440784240186|bc82258eaaf93ee5b9f577a8d401bfc9`, { responseType: 'arraybuffer' })).data;
+    let getAvatarOne = (await axios.get(`https://graph.facebook.com/${one}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`, { responseType: 'arraybuffer' })).data;
     fs.writeFileSync(avatarOne, Buffer.from(getAvatarOne, 'utf-8'));
     
-    let getAvatarTwo = (await axios.get(`https://graph.facebook.com/${two}/picture?height=720&width=720&access_token=170440784240186|bc82258eaaf93ee5b9f577a8d401bfc9`, { responseType: 'arraybuffer' })).data;
+    let getAvatarTwo = (await axios.get(`https://graph.facebook.com/${two}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`, { responseType: 'arraybuffer' })).data;
     fs.writeFileSync(avatarTwo, Buffer.from(getAvatarTwo, 'utf-8'));
     
     let circleOne = await jimp.read(await circle(avatarOne));
@@ -70,7 +75,7 @@ module.exports.run = async function ({ event, api, args }) {
     if (!mention) return api.sendMessage("Vui lòng tag 1 người", threadID, messageID);
     else {
         var one = senderID, two = mention;
-        return makeImage({ one, two }).then(path => api.sendMessage({ body: "Nắm tay nhau thật chặt nhé " + tag + ' đừng buông tay nhé bae😍',
+        return makeImage({ one, two }).then(path => api.sendMessage({ body: "Nắm tay anh, đi cùng anh nha " + tag + ' Nguyện 1 đời yêu em ❤',
             mentions: [{
           tag: tag,
           id: mention

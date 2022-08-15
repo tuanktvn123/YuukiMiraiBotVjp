@@ -1,52 +1,57 @@
-﻿module.exports.config = {
-	name: "upt",
-	version: "1.0.1",
-	hasPermssion: 0,
-	credits: "Mirai Team",
-	description: "Kiểm tra thời gian bot đã online",
-	commandCategory: "system",
-	cooldowns: 5,
-	dependencies: {
-		"pidusage": "",
-		"fast-speedtest-api": ""
-	}
+module.exports.config = {
+  name: "uptime",
+  version: "1.0.2",
+  hasPermssion: 0,
+  credits: "Mirai Team",
+  description: "Kiểm tra thời gian bot đã online",
+  commandCategory: "system",
+  cooldowns: 5,
+  dependencies: {
+    "pidusage": ""
+  }
 };
 
 function byte2mb(bytes) {
-	const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-	let l = 0, n = parseInt(bytes, 10) || 0;
-	while (n >= 1024 && ++l) n = n / 1024;
-	return `${n.toFixed(n < 10 && l > 0 ? 1 : 0)} ${units[l]}`;
+  const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  let l = 0, n = parseInt(bytes, 10) || 0;
+  while (n >= 1024 && ++l) n = n / 1024;
+  return `${n.toFixed(n < 10 && l > 0 ? 1 : 0)} ${units[l]}`;
 }
 
-module.exports.run = async ({ api, event,args, Users, getText }) => {
-	const { threadID, messageID } = event;
-    const { userName } = global.data;
-	const axios = global.nodemodule["axios"];
-	const fast = global.nodemodule["fast-speedtest-api"];
-const { commands } = global.client;
-const { events } = global.client;
-	const speedTest = new fast({
-			token: "YXNkZmFzZGxmbnNkYWZoYXNkZmhrYWxm",
-			verbose: false,
-			timeout: 10000,
-			https: true,
-			urlCount: 5,
-			bufferSize: 8,
-			unit: fast.UNITS.Mbps
-		});
-	const ketqua = await speedTest.getSpeed();
-  const request = require('request');
-	const fs = require("fs");
-	const moment = require("moment-timezone");
-    var gio = moment.tz("Asia/Ho_Chi_Minh").format("HH:mm:ss || D/MM/YYYY");
-	const time = process.uptime(),
-		hours = Math.floor(time / (60 * 60)),
-		minutes = Math.floor((time % (60 * 60)) / 60),
-		seconds = Math.floor(time % 60);
+module.exports.languages = {
+  "vi": {
+    "returnResult": "Bot đã hoạt động được %1 giờ %2 phút %3 giây.\n\n❯ Tổng người dùng: %4\n❯ Tổng Nhóm: %5\n❯ Cpu đang sử dụng: %6%\n❯ Ram đang sử dụng: %7\n❯ Ping: %8ms\n\n=== This bot was made by CatalizCS and SpermLord ==="
+  },
+  "en": {
+    "returnResult": "Bot has been working for %1 hour(s) %2 minute(s) %3 second(s).\n\n❯ Total users: %4\n❯ Total Threads: %5\n❯ Cpu usage: %6%\n❯ RAM usage: %7\n❯ Ping: %8ms\n\n=== This bot was made by CatalizCS and SpermLord ==="
+  }
+}
 
-	const pidusage = await global.nodemodule["pidusage"](process.pid);
+module.exports.run = async ({ api, event, getText }) => {
+  var axios = require("axios");
+    try {
+        var res = await axios("https://randomlinkapi.kirihayuki.repl.co/ayaka");
+    }
+    catch (err) {
+        console.log(err)
+    }
+    var image = (await Promise.all([
+        axios({
+            url: res.data.url,
+            method: "GET",
+            responseType: "stream",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+    ])).map(x => x.data);
+  const time = process.uptime(),
+    hours = Math.floor(time / (60 * 60)),
+    minutes = Math.floor((time % (60 * 60)) / 60),
+    seconds = Math.floor(time % 60);
 
-	const timeStart = Date.now();
-	return api.sendMessage("", event.threadID, () => api.sendMessage(`≻─── • © • ───≺\n\n❯ Time : ${gio}\n❯ Uptime : ${hours}:${minutes}:${seconds}\n❯ Prefix : ${global.config.PREFIX}\n❯ User : ${global.data.allUserID.length}\n❯ Box: ${global.data.allThreadID.length}\n❯ Cpu : ${pidusage.cpu.toFixed(1)}%\n❯ Ram : ${byte2mb(pidusage.memory)}\n❯ Ping : ${Date.now() - timeStart}ms\n❯ Speed : ${ketqua}\n≻─── • ©️ • ───≺`, event.threadID, event.messageID));
+  const pidusage = await global.nodemodule["pidusage"](process.pid);
+
+  const timeStart = Date.now();
+  return api.sendMessage("", event.threadID, () => api.sendMessage({ body: getText("returnResult", hours, minutes, seconds, global.data.allUserID.length, global.data.allThreadID.length, pidusage.cpu.toFixed(1), byte2mb(pidusage.memory), Date.now() - timeStart), attachment: image}, event.threadID, event.messageID));
 }

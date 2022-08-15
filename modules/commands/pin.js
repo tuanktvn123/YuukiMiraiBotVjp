@@ -1,10 +1,10 @@
 module.exports.config = {
-    name: "pin",
+    name: "pinter",
     version: "1.0.0",
     hasPermssion: 0,
     credits: "D-Jukie",
     description: "Tìm kiếm hình ảnh",
-    commandCategory: "GAME",
+    commandCategory: "Dành cho người dùng",
     usages: "[Text]",
     cooldowns: 0,
 };
@@ -13,10 +13,10 @@ module.exports.run = async function({ api, event, args }) {
     const fs = require("fs-extra");
     const request = require("request");
     const keySearch = args.join(" ");
-    if(keySearch.includes("-") == false) return api.sendMessage('🌸Vui lòng nhập theo định dạng: từ khóa cần tìm kiếm - số ảnh cần tìm🌸', event.threadID, event.messageID)
+    if(keySearch.includes("-") == false) return api.sendMessage('Vui lòng nhập theo định dạng: từ khóa cần tìm kiếm - số ảnh cần tìm', event.threadID, event.messageID)
     const keySearchs = keySearch.substr(0, keySearch.indexOf('-'))
     const numberSearch = keySearch.split("-").pop() || 6
-    const res = await axios.get(`https://www.phamvandienofficial.xyz/pinterest?search=${encodeURIComponent(keySearchs)}`);
+    const res = await axios.get(`https://api.ndtmint.repl.co/pinterest?search=${encodeURIComponent(keySearchs)}`);
     const data = res.data.data;
     var num = 0;
     var imgData = [];
@@ -28,7 +28,7 @@ module.exports.run = async function({ api, event, args }) {
     }
     api.sendMessage({
         attachment: imgData,
-        body: '🌸 Có '+ numberSearch + ' kết quả tìm kiếm của từ khóa: '+ keySearchs + ' 🌸'
+        body: numberSearch + ' Kết quả tìm kiếm của từ khóa: '+ keySearchs
     }, event.threadID, event.messageID)
     for (let ii = 1; ii < parseInt(numberSearch); ii++) {
         fs.unlinkSync(__dirname + `/cache/${ii}.jpg`)

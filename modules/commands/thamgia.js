@@ -1,7 +1,7 @@
 module.exports.config = {
  name: "thamgia",
  version: "1.0.0", 
- hasPermssion: 0,
+ hasPermssion: 2,
  credits: "cherry",//ntkhang fix :( 
  description: "...",
  commandCategory: "Lệnh admin/qtv", 

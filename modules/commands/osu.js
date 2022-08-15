@@ -1,10 +1,10 @@
-module.exports.config = {
+﻿module.exports.config = {
 	name: "osu",
 	version: "1.0.2",
 	hasPermssion: 0,
 	credits: "Mirai Team",
 	description: "Lấy thông tin osu thông qua tên người dùng",
-	commandCategory: "other",
+	commandCategory: "Khác",
 	usages: "osu username",
 	cooldowns: 5,
     dependencies: {

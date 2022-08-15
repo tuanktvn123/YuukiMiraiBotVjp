@@ -1,7 +1,7 @@
 module.exports.config = {
 	name: "setexp",
 	version: "0.0.1",
-	hasPermssion: 2,
+	hasPermssion: 3,
 	credits: "loi",
 	description: "thay đổi số tiền của bản thân hoặc người được tag",
 	commandCategory: "Economy",

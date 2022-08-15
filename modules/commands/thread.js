@@ -1,7 +1,7 @@
 module.exports.config = {
 	name: "thread",
 	version: "1.0.5",
-	hasPermssion: 2,
+	hasPermssion: 3,
 	credits: "Mirai Team",
 	description: "Cấm hoặc gỡ cấm nhóm",
 	commandCategory: "system",

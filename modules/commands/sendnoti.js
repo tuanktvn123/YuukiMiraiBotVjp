@@ -1,18 +1,19 @@
+
 module.exports.config = {
 	name: "sendnoti",
-	version: "1.0.1",
+	version: "1.0.2",
 	hasPermssion: 2,
-	credits: "Shiron",
-	description: "Phiên Bản Vippro của sendnoti!",
+	credits: "Mirai mod by HĐGN",
+	description: "Gửi tin nhắn tới các nhóm(reply vào ảnh/video cần gửi kèm)!\nPhiên bản xịn hơn của sendnotiUwU",
 	commandCategory: "Admin",
 	usages: "[Text]",
-	cooldowns: 0
+	cooldowns: 5
 };
 
 module.exports.languages = {
 	"vi": {
-		"sendSuccess": "Đã gửi tin nhắn đến %1 nhóm!",
-		"sendFail": "[!] Không thể gửi thông báo tới %1 nhóm"
+		"sendSuccess": "Đã gửi thánh chỉ tới %1 nhóm",
+		"sendFail": "Không thể gửi thánh chỉ tới %1 nhóm"
 	},
 	"en": {
 		"sendSuccess": "Sent message to %1 thread!",
@@ -20,23 +21,20 @@ module.exports.languages = {
 	}
 }
 
-module.exports.run = async ({ api, event, args, getText }) => {
-const permission = ["100015308170955"];
-if (!permission.includes(event.senderID)) return api.sendMessage("Quyền lồn biên giới?", event.threadID, event.messageID);
+module.exports.run = async ({ api, event, args, getText, Users }) => {
+  const name = await Users.getNameUser(event.senderID)
+const moment = require("moment-timezone");
+      var gio = moment.tz("Asia/Ho_Chi_Minh").format("DD/MM/YYYY || HH:mm:s");  
 if (event.type == "message_reply") {
 const request = global.nodemodule["request"];
 const fs = require('fs')
 const axios = require('axios')
-
-
-var getURL = await request.get(event.messageReply.attachments[0].url);
-		var att = Object.keys(event.messageReply.attachments); 
-
-        var pathname = getURL.uri.pathname;
-
-        var ext = pathname.substring(pathname.lastIndexOf(".") + 1);
-
-        var path = __dirname + `/cache/snoti`+`.${ext}`;
+			var getURL = await request.get(event.messageReply.attachments[0].url);
+			
+					var pathname = getURL.uri.pathname;
+var ext = pathname.substring(pathname.lastIndexOf(".") + 1);
+			
+					var path = __dirname + `/cache/snoti`+`.${ext}`;
 
 
 var abc = event.messageReply.attachments[0].url;
@@ -51,7 +49,7 @@ var abc = event.messageReply.attachments[0].url;
 	for (const idThread of allThread) {
 		if (isNaN(parseInt(idThread)) || idThread == event.threadID) ""
 		else {
-			api.sendMessage({body:"» Notification «\n\n" + args.join(` `),attachment: fs.createReadStream(path) }, idThread, (error, info) => {
+			api.sendMessage({body: `𝗧𝗶𝗺𝗲: ${gio}\n𝗧𝗛𝗔́𝗡𝗛 𝗖𝗛𝗜̉ 𝗧𝗨̛̀ 𝗔𝗗𝗠𝗜𝗡\n𝗡𝗼̣̂𝗶 𝗱𝘂𝗻𝗴: ` + args.join(` `) + `\nGửi đến từ Admin: ${name}`,attachment: fs.createReadStream(path) }, idThread, (error, info) => {
 				if (error) cantSend.push(idThread);
 			});
 			count++;
@@ -68,7 +66,7 @@ else {
 	for (const idThread of allThread) {
 		if (isNaN(parseInt(idThread)) || idThread == event.threadID) ""
 		else {
-			api.sendMessage("» Notification «\n\n" + args.join(` `), idThread, (error, info) => {
+			api.sendMessage(`𝗧𝗶𝗺𝗲: ${gio}\n𝗧𝗛𝗔́𝗡𝗛 𝗖𝗛𝗜̉ 𝗧𝗨̛̀ 𝗔𝗗𝗠𝗜𝗡\n𝗡𝗼̣̂𝗶 𝗱𝘂𝗻𝗴: ` + args.join(` `) + `\nGửi đến từ Admin: ${name}`, idThread, (error, info) => {
 				if (error) cantSend.push(idThread);
 			});
 			count++;
@@ -76,4 +74,4 @@ else {
 		}
 	}
 	return api.sendMessage(getText("sendSuccess", count), event.threadID, () => (cantSend.length > 0 ) ? api.sendMessage(getText("sendFail", cantSend.length), event.threadID, event.messageID) : "", event.messageID); }
-}
+  }

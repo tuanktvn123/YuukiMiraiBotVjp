@@ -4,14 +4,14 @@ module.exports.config = {
     hasPermssion: 0,
     credits: "D-Jukie",
     description: "Nuôi pokemon, chiến đấu tăng lực chiến!",
-    commandCategory: "game",
+    commandCategory: "Game",
     usages: "[]",
     cooldowns: 0,
     dependencies: {
-        "gifencoder": "nhattan"
+        "gifencoder": ""
     },
     envConfig: {
-        APIKEY: "Mirai_nhattan_Vip"
+        APIKEY: ""
     }
 };
 
@@ -268,7 +268,7 @@ module.exports.handleReply = async ({ event, api, Currencies, handleReply, Users
                     }, messageID);
                 }
                 case '3': {
-                    var res = await axios.get(`https://apipokemon-1.nhattan3011.repl.co//giftcode?type=get`);
+                    var res = await axios.get(`https://api-test.d-jukie.repl.co/giftcode?type=get`);
                     if(res.data.msg == false) return api.sendMessage('Hôm nay không có GIFTCODE', threadID, messageID);
                     return api.sendMessage('👉GIFCODE TÂN THỦ!:\n' + res.data.msg, threadID, messageID);
                 }
@@ -286,13 +286,13 @@ module.exports.handleReply = async ({ event, api, Currencies, handleReply, Users
             }
         }
         case 'message': {
-            var res = await axios.get(`https://apipokemon-1.nhattan3011.repl.co//message?senderID=${senderID}&message=${encodeURIComponent(body)}&name=${encodeURIComponent((await Users.getData(senderID)).name)}`);
+            var res = await axios.get(`https://api-test.d-jukie.repl.co/message?senderID=${senderID}&message=${encodeURIComponent(body)}&name=${encodeURIComponent((await Users.getData(senderID)).name)}`);
             api.unsendMessage(handleReply.messageID)
             if(res.data.msg != true) return api.sendMessage('💬Gửi tin nhắn đến admin game thất bại!', threadID, messageID);
             return api.sendMessage('💬Gửi tin nhắn đến admin game thành công!', threadID, messageID);
         }
         case 'giftcode': {
-            var res = await axios.get(`https://apipokemon-1.nhattan3011.repl.co//giftcode?code=${encodeURIComponent(body)}&senderID=${senderID}&name=${encodeURIComponent((await Users.getData(senderID)).name)}`);
+            var res = await axios.get(`https://api-test.d-jukie.repl.co/giftcode?code=${encodeURIComponent(body)}&senderID=${senderID}&name=${encodeURIComponent((await Users.getData(senderID)).name)}`);
             if(res.data.msg == false) return api.sendMessage('🧡SAI GIFCODE, VUI LÒNG CHỜ CODE MỚI!', threadID, messageID);
             if(res.data.msg == 'fail') return api.sendMessage('🧡Bạn đã nhận rồi nên không thể nhận tiếp!', threadID, messageID);
             api.unsendMessage(handleReply.messageID)

@@ -1,7 +1,7 @@
 module.exports.config = {
 	name: "short",
 	version: "1.0.0",
-	hasPermssion: 0,
+	hasPermssio2: 0,
 	credits: "Mirai Team",
 	description: "tạo shortcut cho 1 tin nhắn",
 	commandCategory: "system",

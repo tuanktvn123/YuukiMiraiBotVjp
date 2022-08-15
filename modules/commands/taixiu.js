@@ -2,175 +2,180 @@ module.exports.config = {
   name: "taixiu",
   version: "1.0.0",
   hasPermssion: 0,
-  credits: "DuyVuongUwU",
-  description: "tài xỉu nhưng nó là nhiều người??",
-  commandCategory: "giải trí",
-  usages: "[new/leave]",
-  cooldowns: 5
+  credits: "khoa",
+  description: "Chơi tài xỉu một người đặt, không dùng api",
+  commandCategory: "Game",
+  usages: '[tài/xỉu hoặc chẵn/lẻ] [số tiền]\nDùng ">taixiu luật chơi" để biết luật chơi!',
+  cooldowns: 3
 };
 
-module.exports.handleEvent = async function({ api, event, Currencies }) {
-  const { threadID, messageID, body, senderID } = event;
-  const typ = ['tài', 'xỉu'];
-  const random = typ[Math.floor(Math.random() * typ.length)];  
-  if (!body) return;
-  if (body.toLowerCase() == 'tài' || body.toLowerCase() == 'xỉu') {
-    const gameThread = global.taixiuS.get(threadID) || {};
-    if (!gameThread) return;
-    else {
-      if (!gameThread.player.find(i => i.userID == senderID)) return;
-      else {
-        var s, q;
-        var s = gameThread.player.findIndex(i => i.userID == senderID);
-        var q = gameThread.player[s];
-        if (q.choose.status == true) return api.sendMessage('⚠ Bạn đã chọn rồi không thể chọn lại!', threadID, messageID);
-        else {
-          const fs = require('fs-extra');
-          const axios = require('axios');
-          if (body.toLowerCase() == 'tài') {
-            gameThread.player.splice(s, 1);
-            gameThread.player.push({ name: q.name, userID: senderID, choose: { status: true, msg: 'tài' } });
-            api.sendMessage('👤 Người chơi ' + q.name + ' đã chọn TÀI!!', threadID, messageID);
-          }
-          else {
-            gameThread.player.splice(s, 1);
-            gameThread.player.push({ name: q.name, userID: senderID, choose: { status: true, msg: 'xỉu' } });
-            api.sendMessage('👤 Người chơi ' + q.name + ' đã chọn XỈU!!', threadID, messageID);
-          }
-          var vv = 0,
-              vvv = gameThread.player.length;
-          for (var c of gameThread.player) {
-            if (c.choose.status == true) vv++;
-          }
-          if (vv == vvv) {
-            api.sendMessage('🥳Đang lắc....', threadID, (err, data) => {
-              if (err) return api.sendMessage(err, threadID, messageID);
-              setTimeout(async function () {
-                api.unsendMessage(data.messageID);
-                  var ketqua = random
-                  var win = [];
-                  var lose = [];
-                  if (ketqua.indexOf('tài') == 0) {
-                    for (var i of gameThread.player) {
-                      if (i.choose.msg == 'tài') {
-                        win.push({ name: i.name, userID: i.userID });
-                      }
-                      else {
-                        lose.push({ name: i.name, userID: i.userID });
-                      }
-                    }
-                  }
-                  else {
-                    for (var i of gameThread.player) {
-                      if (i.choose.msg == 'xỉu') {
-                        win.push({ name: i.name, userID: i.userID });
-                      }
-                      else {
-                        lose.push({ name: i.name, userID: i.userID });
-                      }
-                    }
-                  }
-                  var msg = '💎 KẾT QUẢ  ' + ketqua.toUpperCase() + '\n🥳 Những người chiến thắng:\n';
-                  var dem_win = 0;
-                  var dem_lose = 0;
-                  for (var w of win) {
-                    await Currencies.increaseMoney(w.userID, parseInt(gameThread.money * 2));
-                    dem_win++;
-                    msg += dem_win + '. ' + w.name + ' (' + w.userID + ')\n';
-                  }
-                  for (var l of lose) {
-                    await Currencies.decreaseMoney(l.userID, parseInt(gameThread.money));
-                    if (dem_lose == 0) {
-                      msg += '\n🥺 Những người thua trong ván này:\n';
-                    }
-                    dem_lose++;
-                    msg += dem_lose + '. ' + l.name + ' (' + l.userID + ')\n';
-                  }
-                  msg += '\n\n🎁Cộng tiền và trừ tiền :\n';
-                  msg += '🎁 Những người thắng nhận được [ ' + (gameThread.money * 2) + '$ ]\n';
-                  msg += '💰 Những người thua bị trừ [' + gameThread.money + '$ ]';
-                  return api.sendMessage(msg, threadID);
-              }, 5000);
-            });
-          }
-          else return;
-        }
-      }
-    }
-  }
+module.exports.onLoad = () => {
+  const fs = require("fs-extra");
+  const request = require("request");
+  const dirMaterial = __dirname + `/cache/`;
+  if (!fs.existsSync(dirMaterial + "cache")) fs.mkdirSync(dirMaterial, { recursive: true });
+  if (!fs.existsSync(dirMaterial + "icontaixiu.png")) request("https://i.postimg.cc/ydh7gfLg/icontaixiu.png").pipe(fs.createWriteStream(dirMaterial + "icontaixiu.png"));
 }
-module.exports.run = async function({ api, event, args, Threads, Users, Currencies }) {
-  try {
-    if (!global.taixiuS) global.taixiuS = new Map();
 
-    const { threadID, messageID, senderID } = event;
-    var gameThread = global.taixiuS.get(threadID);
+module.exports.run = async function ({
+  api,
+  event,
+  args,
+  Currencies,
+  Users
+}) {
 
-    if (args[0] == 'create' || args[0] == 'new' || args[0] == '-c') {
-      if (!args[1] || isNaN(args[1])) return api.sendMessage('⚠ Số tiền cược không phải là một con số hơp lệ!', threadID, messageID);
-      if (parseInt(args[1]) < 50) return api.sendMessage('⚠ Số tiền cược phải lớn hơn hoặc bằng 50$!!', threadID, messageID);
-      var check = await checkMoney(senderID, args[1]);
-      if (check == false) return api.sendMessage('⚠ Bạn không có đủ ' + args[1] + '$ để tạo bàn game mới!!', threadID, messageID);
-      if (global.taixiuS.has(threadID)) return api.sendMessage('⚠ Nhóm này đã được mở bàn game!', threadID, messageID);
-      var name = await Users.getNameUser(senderID);
-      global.taixiuS.set(threadID, { box: threadID, start: false, author: senderID, player: [{ name, userID: senderID, choose: { status: false, msg: null } }], money: parseInt(args[1]) });
-      return api.sendMessage('🥳 Đã tạo thành công bàn chơi game!\n=> Số tiền cược: ' + parseInt(args[1]) + '$\n=> Số thành viên tham gia: 1 thành viên\n=> Nếu muốn kết thúc bàn game vui lòng ghi ' + global.config['PREFIX'] + this.config.name + ' end\n=> Tham gia nhóm game này vui lòng ghi ' + global.config['PREFIX'] + this.config.name + ' join', threadID);
+  // Loli is the best!!
+
+  const { loadImage, createCanvas } = require("canvas");
+  const fs = global.nodemodule["fs-extra"];
+  const axios = global.nodemodule["axios"];
+  let pathImg = __dirname + "/cache/bkdia.png";
+  let pathXn1 = __dirname + "/cache/xingaum.png";
+  let pathXn2 = __dirname + "/cache/xingauh.png";
+  let pathXn3 = __dirname + "/cache/xingaub.png";
+
+  var { threadID, messageID, senderID } = event;
+  const dataMoney = await Currencies.getData(senderID);
+  const money = dataMoney.money
+  if (args.length !== 2) return api.sendMessage("Không đúng định dạng!", threadID, messageID);
+
+  if (event.body.indexOf("luật chơi") !== -1) {
+    var msg = {
+      body: "-Có hai cách cược t����i-xỉu và chẵn-lẻ.\n\n-Nếu cược tài xỉu:\n +Xỉu: Tổng 3 viên xúc xắc từ 4-10 điểm\n +Tài: Tổng 3 viên xúc xắc từ 11–17 điểm\n +Nếu ba xí ngầu bằng nút nhau cả tài và xỉu đều thua\n\n-Nếu cược chẵn lẻ:\n +Chẵn: khi tổng điểm 3 viên xúc xắc là số chẵn(4, 6, 8, 10, 12, 14, 16, 18)\n +Lẻ: khi tổng điểm 3 viên xúc xắc là số lẻ(3, 5, 7, 9, 11, 13, 15, 17).",
+      attachment: fs.createReadStream(__dirname + `/cache/icontaixiu.png`)
     }
-    else if (args[0] == 'join' || args[0] == '-j') {
-      if (!global.taixiuS.has(threadID)) return api.sendMessage('⚠ Nhóm này hiện chưa có bàn game nào!\n=> Vui lòng hãy tạo bàn game mới để tham gia!', threadID, messageID);
-      if (gameThread.start == true) return api.sendMessage('⚠ Hiện tại bàn game này đã được bắt đầu trước khi bạn tham gia nên bạn không thể tham gia bàn game này sau khi những người khác chơi xong!', threadID, messageID);
-      var check = await checkMoney(senderID, gameThread.money);
-      if (check == false) return api.sendMessage('⚠ Bạn không có đủ ' + gameThread.money + '$ để tham gia bàn game này!', threadID, messageID);
-      if (gameThread.player.find(i => i.userID == senderID)) return api.sendMessage('⚠ Hiện tại bạn đã tham gia bàn game này!', threadID, messageID);
-      var name = await Users.getNameUser(senderID);
-      gameThread.player.push({ name, userID: senderID, choose: { stats: false, msg: null } });
-      global.taixiuS.set(threadID, gameThread);
-      return api.sendMessage('🥳 Bạn đã tham gia bàn game!\n=> Số thành viên hiện tại là ' + gameThread.player.length + ' thành viên', threadID, messageID);
-    }
-    else if (args[0] == 'leave' || args[0] == '-l') {
-      if (!global.taixiuS.has(threadID)) return api.sendMessage('⚠ Hiện tại không có bàn game nào để rời!', threadID, messageID);
-      if (!gameThread.player.find(i => i.userID == senderID)) return api.sendMessage('⚠ Bạn đã không có trong bàn game để rời!', threadID, messageID);
-      if (gameThread.start == true) return api.sendMessage('⚠ Bàn game đã được bắt đầu không thể rời!', threadID, messageID);
-      if (gameThread.author == senderID) {
-        global.taixiuS.delete(threadID);
-        var name = await Users.getNameUser(senderID);
-        return api.sendMessage('🥺 ' + name + ' đã rời khỏi bàn game, bàn game của nhóm đã được giải tán!', threadID, messageID);
-      }
-      else {
-        gameThread.player.splice(gameThread.player.findIndex(i => i.userID == senderID), 1);
-        global.taixiuS.set(threadID, gameThread);
-        var name = await Users.getNameUser(senderID);
-        api.sendMessage('🥺 Bạn đã rời khỏi bàn game của nhóm!', threadID, messageID);
-        return api.sendMessage('🥺 ' + name + ' đã rời khỏi bàn game!\n=> Hiện tại bàn game còn ' + gameThread.player.length + ' thành viên', threadID);
-      }
-    }
-    else if (args[0] == 'start' || args[0] == '-s') {
-      if (!gameThread) return api.sendMessage('⚠ Hiện tại nhóm này chưa có bàn game nào!', threadID, messageID);
-      if (gameThread.author != senderID) return api.sendMessage('⚠ Bạn không phải là người tạo ra bàn game này nên không thể bắt đầu game', threadID, messageID);
-      if (gameThread.player.length <= 1) return api.sendMessage('⚠ Bàn game của bạn không có đủ thành viên để có thể bắt đầu!!!', threadID, messageID);
-      if (gameThread.start == true) return api.sendMessage('⚠ Bàn game của bạn đã được bắt đầu từ trước', threadID, messageID);
-      gameThread.start = true;
-      global.taixiuS.set(threadID, gameThread);
-      return api.sendMessage('🔊 GAME START: \n-> Xin mời ' + gameThread.player.length + ' người chơi nhắn "tài" hoặc "xỉu"(Lưu ý: nhắn ở trong group này không nhắn trong group khác!!!)', threadID);
-    }
-    else if (args[0] == 'end' || args[0] == '-e') {
-      if (!gameThread) return api.sendMessage('⚠ Hiện tại nhóm này chưa có bàn game nào!', threadID, messageID);
-      if (gameThread.author != senderID) return api.sendMessage('⚠ Bạn không phải là người tạo ra bàn game nên không thể xóa bàn game', threadID, messageID);
-      global.taixiuS.delete(threadID);
-      return api.sendMessage('🎆 Đã xóa bàn game!', threadID, messageID);
-    }
-    else {
-      return api.sendMessage("⚠ BODY:\n- Create/new/-c: Tạo bàn chơi tài xỉu\n- Join/-j: Tham gia vào bàn tài xỉu\n- Leave/-l: Rời khỏi bàn tài xỉu\n- Start/-s: Bắt đầu bàn tài xỉu\n- End/-e: Kết thúc bàn tài xỉu", threadID, messageID);
-    }
+    return api.sendMessage(msg, threadID, messageID);
   }
-  catch (err) {
-    return api.sendMessage('⚠ ERROR MODULE TAIXIU: ' + err, event.threadID, event.messageID);
+
+  var datcuoc = args[0].toLowerCase();
+  var tiencuoc = parseInt(args[1]);
+  if (datcuoc !== 'tài' && (datcuoc !== 'xỉu' && (datcuoc !== 'chẵn' && (datcuoc !== 'lẻ')))) return api.sendMessage(`Đặt cược tài/xỉu hoặc chẵn/lẻ thôi, ${datcuoc} là cc gì thế!`, threadID, messageID);
+  if (tiencuoc < 100) return api.sendMessage("Tiền cược quá ít tao không chấp nhận!", threadID, messageID);
+  if (isNaN(tiencuoc)) return api.sendMessage("Tiền cược phải là một con số!", threadID, messageID);
+  if (tiencuoc > money) return api.sendMessage(`Bạn không có đủ ${tiencuoc}$ để chơi, vui lòng theo thầy Huấn bươn chải!`, threadID, messageID);
+
+  var xnmot = Math.floor(Math.random() * 6) + 1;
+  var xnhai = Math.floor(Math.random() * 6) + 1;
+  var xnba = Math.floor(Math.random() * 6) + 1;
+  var tong = xnmot + xnhai + xnba;
+
+  if (datcuoc == 'tài' || (datcuoc == 'xỉu')) {
+    if (xnmot == xnhai && (xnmot == xnba)) var ketqua = 'thua';
+    if (tong >= 4 && (tong <= 10)) var ketqua = 'xỉu';
+    if (tong >= 11 && (tong <= 17)) var ketqua = 'tài';
+  };
+
+  if (datcuoc == 'chẵn' || (datcuoc == 'lẻ')) {
+    if (tong % 2 == 0) var ketqua = 'chẵn';
+    else var ketqua = 'lẻ';
+  };
+
+  if (xnmot == 1) var link1 = `https://i.postimg.cc/c1mGP3CX/x-ng-u-1.png`
+  if (xnmot == 2) var link1 = `https://i.postimg.cc/pr2bpWGf/x-ng-u-2.png`
+  if (xnmot == 3) var link1 = `https://i.postimg.cc/d0dz6kgR/x-ng-u-3.png`
+  if (xnmot == 4) var link1 = `https://i.postimg.cc/52Dh8qKN/x-ng-u-4.png`
+  if (xnmot == 5) var link1 = `https://i.postimg.cc/76nj8vHf/x-ng-u-5.png`
+  if (xnmot == 6) var link1 = `https://i.postimg.cc/j5bBFqrp/x-ng-u-6.png`
+
+  if (xnhai == 1) var link2 = `https://i.postimg.cc/c1mGP3CX/x-ng-u-1.png`
+  if (xnhai == 2) var link2 = `https://i.postimg.cc/pr2bpWGf/x-ng-u-2.png`
+  if (xnhai == 3) var link2 = `https://i.postimg.cc/d0dz6kgR/x-ng-u-3.png`
+  if (xnhai == 4) var link2 = `https://i.postimg.cc/52Dh8qKN/x-ng-u-4.png`
+  if (xnhai == 5) var link2 = `https://i.postimg.cc/76nj8vHf/x-ng-u-5.png`
+  if (xnhai == 6) var link2 = `https://i.postimg.cc/j5bBFqrp/x-ng-u-6.png`
+
+  if (xnba == 1) var link3 = `https://i.postimg.cc/c1mGP3CX/x-ng-u-1.png`
+  if (xnba == 2) var link3 = `https://i.postimg.cc/pr2bpWGf/x-ng-u-2.png`
+  if (xnba == 3) var link3 = `https://i.postimg.cc/d0dz6kgR/x-ng-u-3.png`
+  if (xnba == 4) var link3 = `https://i.postimg.cc/52Dh8qKN/x-ng-u-4.png`
+  if (xnba == 5) var link3 = `https://i.postimg.cc/76nj8vHf/x-ng-u-5.png`
+  if (xnba == 6) var link3 = `https://i.postimg.cc/j5bBFqrp/x-ng-u-6.png`
+
+  var color = [
+    "https://i.postimg.cc/mggtbQLy/green.png",
+    "https://i.postimg.cc/Gmg99H9w/lightblue.png",
+    "https://i.postimg.cc/PqLJDT8L/lightgreen.png",
+    "https://i.postimg.cc/26h5HGGr/luzaly.png",
+    "https://i.postimg.cc/90BQ2fsk/orange.png",
+    "https://i.postimg.cc/T2jwgkhc/pantone.png",
+    "https://i.postimg.cc/1zLtc2pv/pink.png",
+    "https://i.postimg.cc/2yYSgW9v/red.png",
+    "https://i.postimg.cc/DwXR4Nwv/yellow.png",
+    "https://i.postimg.cc/y8zQbyHn/violet.png"
+  ];
+  var background = color[Math.floor(Math.random() * color.length)];
+
+  // Đống link trên bị lỗi thì liên hệ https://www.facebook.com/khoa.lolicon/ để lấy ảnh.
+
+  let Xingaum = (
+    await axios.get(
+      `${link1}`,
+      { responseType: "arraybuffer" }
+    )
+  ).data;
+  fs.writeFileSync(pathXn1, Buffer.from(Xingaum, "utf-8"));
+
+  let Xingauh = (
+    await axios.get(
+      `${link2}`,
+      { responseType: "arraybuffer" }
+    )
+  ).data;
+  fs.writeFileSync(pathXn2, Buffer.from(Xingauh, "utf-8"));
+
+  let Xingaub = (
+    await axios.get(
+      `${link3}`,
+      { responseType: "arraybuffer" }
+    )
+  ).data;
+  fs.writeFileSync(pathXn3, Buffer.from(Xingaub, "utf-8"));
+
+  let getBkdia = (
+    await axios.get(`${background}`, {
+      responseType: "arraybuffer",
+    })
+  ).data;
+  fs.writeFileSync(pathImg, Buffer.from(getBkdia, "utf-8"));
+
+  let baseImage = await loadImage(pathImg);
+  let baseXn1 = await loadImage(pathXn1);
+  let baseXn2 = await loadImage(pathXn2);
+  let baseXn3 = await loadImage(pathXn3);
+  let canvas = createCanvas(baseImage.width, baseImage.height);
+  let ctx = canvas.getContext("2d");
+  ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+  ctx.drawImage(baseXn1, 200, 150, 100, 100);
+  ctx.drawImage(baseXn2, 280, 150, 100, 100);
+  ctx.drawImage(baseXn3, 250, 220, 100, 100);
+  const imageBuffer = canvas.toBuffer();
+  fs.writeFileSync(pathImg, imageBuffer);
+  fs.removeSync(pathXn1);
+  fs.removeSync(pathXn2);
+  fs.removeSync(pathXn3);
+
+  if (ketqua == 'thua') {
+    Currencies.decreaseMoney(senderID, tiencuoc);
+    return api.sendMessage({ body: `Xí ngầu ra: ${xnmot}, ${xnhai} và ${xnba}\nBa xí ngầu bằng nút nên cả tài và xỉu đều thua sml!`, attachment: fs.createReadStream(pathImg) },
+      threadID,
+      () => fs.unlinkSync(pathImg),
+      messageID);
   }
-  async function checkMoney(senderID, maxMoney) {
-    var i, w;
-    i = (await Currencies.getData(senderID)) || {};
-    w = i.money || 0
-    if (w < parseInt(maxMoney)) return false;
-    else return true;
+  else if (ketqua == datcuoc) {
+    Currencies.increaseMoney(senderID, tiencuoc);
+    return api.sendMessage({ body: `Xí ngầu ra: ${xnmot}, ${xnhai} và ${xnba}\nTổng là ${tong} nút\nKết quả là ${ketqua} \nBạn thắng! +${tiencuoc}$`, attachment: fs.createReadStream(pathImg) },
+      threadID,
+      () => fs.unlinkSync(pathImg),
+      messageID);
   }
+  else {
+    Currencies.decreaseMoney(senderID, tiencuoc);
+    return api.sendMessage({ body: `Xí ngầu ra: ${xnmot}, ${xnhai} và ${xnba}\nTổng là ${tong} nút\nKết quả là ${ketqua} \nBạn thua sml -${tiencuoc}$`, attachment: fs.createReadStream(pathImg) },
+      threadID,
+      () => fs.unlinkSync(pathImg),
+      messageID);
+  };
+
+  // Một lần nữa loli is the best!! :>
 }

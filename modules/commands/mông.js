@@ -1,10 +1,14 @@
+ /**
+* @author CallmeSun
+* @warn Vui lòng không sửa credits cảm ơn !
+*/
 module.exports.config = {
   name: "mông",
   version: "1.0.0",
   hasPermssion: 0,
-  credits: "VDT",
+  credits: "CallmeSun",
   description: "Random Ảnh Mông Gái Cực Bổ Mắt ( Lưu Ý Đây Là Lệnh Ảnh 18+ Cân Nhắc Trước Khi Sử Dụng)",
-  commandCategory: "Random-img",
+  commandCategory: "nsfw",
   usages: "mông",
   cooldowns: 5,
   dependencies: {
@@ -71,10 +75,10 @@ const fs = global.nodemodule["fs-extra"];
   var data = await Currencies.getData(event.senderID);
   var exp =  data.exp;
   var money = data.money
-      if(money < 100) api.sendMessage("Bạn cần 100 đô để xem ảnh ?",event.threadID,event.messageID)
+      if(money < 5000) api.sendMessage("Bạn cần 5000 đô để xem ảnh ?",event.threadID,event.messageID)
           else {
-   Currencies.setData(event.senderID, options = {money: money - 100})
-   var callback = () => api.sendMessage({body:`Bổ mắt nhé😼\n» Số dư: -100 đô «`,attachment: fs.createReadStream(__dirname + "/cache/5.jpg")}, event.threadID, () => fs.unlinkSync(__dirname + "/cache/5.jpg")); 
+   Currencies.setData(event.senderID, options = {money: money - 500})
+   var callback = () => api.sendMessage({body:`Bổ mắt nhé😼\n» Số dư: -5000 đô «`,attachment: fs.createReadStream(__dirname + "/cache/5.jpg")}, event.threadID, () => fs.unlinkSync(__dirname + "/cache/5.jpg")); 
       return request(encodeURI(link[Math.floor(Math.random() * link.length)])).pipe(fs.createWriteStream(__dirname+"/cache/5.jpg")).on("close",() => callback());
    }
 };

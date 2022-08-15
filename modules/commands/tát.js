@@ -5,7 +5,7 @@ module.exports.config = {
   name: "tát",
   version: "1.0.0",
   hasPermssion: 0,
-  credits: "Hungcatmoi (fix lại by CHIP)",
+  credits: "Yuuki",
   description: "Tát người bạn tag",
   commandCategory: "general",
   usages: "tát [tag người bạn cần Tát]",

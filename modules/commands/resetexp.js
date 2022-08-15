@@ -1,11 +1,11 @@
 module.exports.config = {
     name: "resetexp",
     version: "1.0.0",
-    hasPermssion: 2,
-    credits: "~",
-    description: "chỉnh exp về ban đầu",
-    commandCategory: "admin",
-    usages: "",
+    hasPermssion: 1,
+    credits: "manhIT",
+    description: "Reset số kinh nghiệm của cả nhóm về 0",
+    commandCategory: "group",
+    usages: "[cc], [del], [all]",
     cooldowns: 5
 };
 

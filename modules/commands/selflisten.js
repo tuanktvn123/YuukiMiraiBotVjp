@@ -20,4 +20,6 @@ else return api.sendMessage("Sai cú pháp", event.threadID, event.messageID);
 	
   api.sendMessage("Đã "+onoff+" chế độ selfListen ", event.threadID, event.messageID);
   
+}ent.messageID);
+  
 }
