@@ -3,8 +3,8 @@ module.exports.config = {
 	version: "1.1.4",
 	hasPermssion: 0,
 	credits: "DungUwU",
-	description: "baucua nhiều người",
-	commandCategory: "GAME",
+	description: "baucua nhiều người có thể chơi cùng",
+	commandCategory: "Games",
 	usages: "[create/leave/start]\n[nai/bầu/gà/tôm/cua/cá]",
 	dependencies: {
 		"fs": "",
@@ -15,23 +15,23 @@ module.exports.config = {
 
 module.exports.languages = {
 	"vi": {
-        "missingInput": "Số tiền đặt cược không được để trống hoặc là số âm",
-        "wrongInput": "Nhập liệu không hợp lệ?",
-        "moneyBetNotEnough": "Số tiền bạn đặt lớn hơn hoặc bằng số dư của bạn!",
-        "limitBet": "Số coin đặt không được dưới 50$!",
-        "alreadyHave": "Đang có 1 ván bầu cua diễn ra ở nhóm này!",
-        "alreadyBet": "Bạn đã cược vào đây từ trước.",
-        "createSuccess": "[ BAUCUA ] Tạo thành công, dùng:\nĐể tham gia đặt cược, dùng:\n%1%2 [nai/bầu/gà/tôm/cua/cá] tiền_cược\n(có thể đặt nhiều con cùng lúc)",
-        "noGame": "[ BAUCUA ] Nhóm của bạn không có ván bầu cua nào đang diễn ra cả!",
-        "betSuccess": "Đặt thành công %1 đô vào %2",
-        "notJoined": "Bạn chưa tham gia bầu cua ở nhóm này!",
-        "outSuccess": "Đã rời ván bầu cua thành công, bạn sẽ được hoàn tiền!",
-        "shaking": "Đang lắc...",
-        "final": " => [  KẾT QUẢ  ] <=",
-        "notAuthor": "Bạn khồng phải chủ phòng.",
-        "unknown": "Câu lệnh không hợp lệ, để xem cách dùng, sử dụng: %1help %2",
-        "noPlayer": "Hiện không có người đặt cược",
-        "closed": "Đã đóng ván bầu cua!"
+        "missingInput": "💵 Số ti��n đặt cược không được để trống hoặc là số âm",
+        "wrongInput": "💵 Bạn chưa nhập số tiền ?",
+        "moneyBetNotEnough": "💵 Bạn không đủ tiền trong ví!",
+        "limitBet": "💵 Số tiền bạn đặt phải trên 100.Vnđ",
+        "alreadyHave": "⚡ Box của bạn đã có bàn bầu cua!",
+        "alreadyBet": "⚡ Bạn đã cược vào đây từ trước!",
+        "createSuccess": "[ BÀN BẦU CUA ] Tạo thành công.\n~bbaucua nai Or gà... + Số tiền cược.\nCó thể đặt nhiều con cùng một lúc!",
+        "noGame": "[ BÀN BẦU CUA ] Box của bạn không có bàn bầu cua nào đang diễn ra cả!",
+        "betSuccess": "💵 Đặt thành công %1.Vnđ vào %2",
+        "notJoined": "⚡ Bạn chưa tham gia bầu cua ở box này!",
+        "outSuccess": "⚡ Đã rời bàn bầu cua thành công, bạn sẽ được hoàn tiền!",
+        "shaking": "🌸 Đang lắc...",
+        "final": " ===⟩⟩ KẾT QUẢ ⟨⟨===",
+        "notAuthor": "⚡ Bạn không phải chủ phòng.",
+        "unknown": "=====🦌 Bàn Bầu Cua 🐓=====\n\n🍐 ~bbaucua create ≻ Để tạo bàn.\n🦀 ~bbaucua nai Or gà... + Số tiền cược ≻ Để tham gia bàn.\n🦞 ~bbaucua start ≻ Để bắt đầu.\n🐟 ~bbaucua leave ≻ Để rời khỏi bàn.",
+        "noPlayer": "⚡ Hiện không có người đặt cược",
+        "closed": "⚡ Đã đóng bàn bầu cua!"
 	}
 }
 
@@ -145,7 +145,7 @@ module.exports.run = async function({ api, event, args, getText, Users, Currenci
 			moneyBet = parseInt(args[1]);
 		    if (isNaN(moneyBet) || moneyBet <= 0) return send(getText("missingInput"));
 			if (moneyBet > moneyUser) return send(getText("moneyBetNotEnough"));
-			if (moneyBet < 50) return send(getText("limitBet"));
+			if (moneyBet < 100) return send(getText("limitBet"));
 			if (threadID in global.client.baucua) {
 				if (global.client.baucua[threadID].status == "pending") {
 					let luachon = args[0].toLowerCase();

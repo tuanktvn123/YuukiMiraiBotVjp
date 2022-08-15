@@ -4,7 +4,7 @@ module.exports.config = {
     hasPermssion: 0,
     credits: "D-Jukie",
     description: "Tự động setname cho thành viên mới",
-    commandCategory: "box",
+    commandCategory: "Nhóm",
     usages: "[add <name> /remove] ",
     cooldowns: 5
 }

@@ -6,11 +6,11 @@ module.exports.config = {
   credits: "DungUwU",
   description: "chơi loto",
   usages: "[create/join/start]\n---------o>\ncreate [số tiền] (tối thiểu 50 đô)\njoin (số dư phải >= với số người tạo đặt)\nstart (bắt đầu trò chơi)\n---------o>",
-  commandCategory: "trò chơi nhiều người",
+  commandCategory: "game",
   cooldowns: 5,
   envConfig: {
-    maxPlayers: 5,//tối thiểu 2, tối đa 10
-    getDelay: 5 //delay bốc số (giây)
+    maxPlayers: 10,//tối thiểu 2, tối đa 10
+    getDelay: 8 //delay bốc số (giây)
   }
 };
 
@@ -320,7 +320,7 @@ module.exports.run = async ({ event, api, args, Currencies, Users, getText }) =>
       }
     }
     default: {
-        sendT(getText("info"));
+    	sendT(getText("info"));
     }
   }
 }

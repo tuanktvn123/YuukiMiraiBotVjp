@@ -1,10 +1,10 @@
-module.exports.config = {
+﻿module.exports.config = {
 	name: "giveaway",
 	version: "0.0.1",
 	hasPermssion: 0,
 	credits: "Mirai Team",
 	description: "Give away dành cho nhóm chat, bao xịn xò xD",
-	commandCategory: "other",
+	commandCategory: "Game",
 	usages: "[create/details/join/roll/end] [IDGiveAway]",
 	cooldowns: 5
 };

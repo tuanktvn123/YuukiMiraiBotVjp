@@ -35,7 +35,7 @@ module.exports.run = async function ({api, event, args, Users, Currencies }) {
     var coins = args[1]
     var content = args[0]
     if (!content){
-        var msg = { body: "===== 🎲 Hệ Thống Chẵn Lẻ Tài Xỉu Momo 🎲  =====\n[ 🐧 ] Đây Là Trung Tâm Cho Các Bạn Nâng Đôi Gia Sản Còn Phá Sản Thì Chịu Để Có Thể Tham Gia Chơi Nhân Đôi Tài Sản Thì Bạn Cần Nhập Các Lệnh Sau.\n\n[ 🐧 ] » Chanlemomo [ C [ 2 , 4 , 6 , 8 ] | L [1 , 3 , 5 , 7 ] | C2 [ 0 , 2 , 4 , 6 , 8 ] | L2 [ 1 , 3 , 5 , 7 , 9 ] ] ! \n[ 🐧 ] » Đây Là Game Chẵn Lẻ Các Số Dưới Đây Là Các Số Cuối Mã GD Khi Bot Gửi Ảnh Nhé Nên Cố Mà Để Ý Khong Keu Bot Bip HiuHiu.\n\n[ 🐧 ] » Chanlemomo [ T [ 5 , 6 , 7 , 8 ] | X [ 1 , 2 , 3 , 4 ] | T2 [ 5 , 6 , 7 , 8 , 9 ] | L2 [ 0 , 1 , 2 , 3 , 4 ] ] ! \n[ 🐧 ] » Đây Là Trò Tài Xỉu Dành Cho Mấy Fen Thích TaiXiu Hơn ChanLe.\n\n[ 🐧 ] » Chanlemomo [ N1 [ 1 , 2 , 3 ] | N2 [ 4 , 5 , 6 ] | N3 [ 7 , 8 , 9 ] | N0 [ 0 ] ] ! \n[ 🐧 ] » Riêng Chơi Cái Này Có Thể Nâng Tài Sản Lên X3 Hoặc X5 =)) Sịt Thì Khóc Đi Nka Moaz :>.\n\n[ 🐧 ] » Hãy Tham Gia Đi Tục Ngữ Có Câu ( Đen Tình Đỏ Bạc ) Đen Tình Vô Đây Giải Sầu Nha :<."
+        var msg = { body: "===== 🎲 Hệ Thống Chẵn Lẻ Tài Xỉu Momo 🎲  =====\n[ 🐧 ] Đây Là Trung Tâm Cho Các Bạn Nâng Đôi Gia Sản Còn Phá Sản Thì Chịu Để Có Thể Tham Gia Chơi Nhân Đôi Tài Sản Thì Bạn Cần Nhập Các Lệnh Sau.\n\n[ 🐧 ] »Chanlemomo [ C [ 2 , 4 , 6 , 8 ] | L [1 , 3 , 5 , 7 ] | C2 [ 0 , 2 , 4 , 6 , 8 ] | L2 [ 1 , 3 , 5 , 7 , 9 ] ] ! \n[ 🐧 ] »Đây Là Game Chẵn Lẻ Các Số Dưới Đây Là Các Số Cuối Mã GD Khi Bot Gửi Ảnh Nhé Nên Cố Mà Để Ý Khong Keu Bot Bip HiuHiu.\n\n[ 🐧 ] »Chanlemomo [ T [ 5 , 6 , 7 , 8 ] | X [ 1 , 2 , 3 , 4 ] | T2 [ 5 , 6 , 7 , 8 , 9 ] | L2 [ 0 , 1 , 2 , 3 , 4 ] ] ! \n[ 🐧 ] »Đây Là Trò Tài Xỉu Dành Cho Mấy Fen Thích TaiXiu Hơn ChanLe.\n\n[ 🐧 ] »Chanlemomo [ N1 [ 1 , 2 , 3 ] | N2 [ 4 , 5 , 6 ] | N3 [ 7 , 8 , 9 ] | N0 [ 0 ] ] ! \n[ 🐧 ] »Riêng Chơi Cái Này Có Thể Nâng Tài Sản Lên X3 Hoặc X5 =)) Sịt Thì Khóc Đi Nka Moaz :>.\n\n[ 🐧 ] »Hãy Tham Gia Đi Tục Ngữ Có Câu ( Đen Tình Đỏ Bạc ) Đen Tình Vô Đây Giải Sầu Nha :<."
 , attachment : [
       fs.createReadStream(__dirname + "/cache/clmm.png")
     ]}
@@ -225,7 +225,7 @@ module.exports.run = async function ({api, event, args, Users, Currencies }) {
     ctx.fillText(name, 547, 816);
     ctx.fillStyle = "#FF00FF";
     ctx.font = "22px SplineSans-Medium";
-    const data = [" 0392462491 "];
+    const data = [" 0993457888 ", " 0984444444 ", " 0992229333 ", " 059874444 " , " 0568777777 " , " 0764322222 "];
     var sdt = data[Math.floor(Math.random() * data.length)]
     ctx.fillText(`${sdt}`, 547, 884);
     ctx.font = "22px SplineSans";

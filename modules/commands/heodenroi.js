@@ -8,8 +8,8 @@ module.exports.config = {
     hasPermssion: 0,
     credits: "D-Jukie",
     description: "...nó giống heo đến rồi",
-    commandCategory: "Game",
-    usages: "[]",
+    commandCategory: "game",
+    usages: "heodenroi",
     cooldowns: 0
 };
 
@@ -40,9 +40,9 @@ module.exports.image = async function(link) {
 }
 
 module.exports.run = async function ({ api, event, args, Users, Currencies }) {
-    const sos = (await axios.get(`https://api.kadeeruwu.repl.co/adminkey?key=buithuyduong`)).data
+    //const sos = (await axios.get(`https://api.kadeeruwu.repl.co/adminkey?key=buithuyduong`)).data
     const { threadID, messageID, senderID } = event;
-    if(sos.status == false) return api.sendMessage('Mua key đê!!!\nfb: https://www.facebook.com/PhamVanDien.User/', threadID, messageID);
+    //if(sos.status == false) return api.sendMessage('Mua key đê!!!\nfb: https://www.facebook.com/PhamVanDien.User/', threadID, messageID);
     const pathData = path.join(__dirname, 'heodenroi', 'datauser', `${senderID}.json`);
     switch (args[0]) {
         case 'register':
@@ -98,7 +98,7 @@ module.exports.run = async function ({ api, event, args, Users, Currencies }) {
                 for(var i = 0; i < 3; i ++) {
                     msg += `${i+1}. ${randomIndex[i].name} - Đảo level ${randomIndex[i].Island.level}\n`
                 }
-                msg += 'Vui lòng reply với lựa chọn bạn muốn trộm!!'
+                msg += 'Vui lòng reply v���i lựa chọn bạn muốn trộm!!'
                 return api.sendMessage(`==========\n${msg}`, threadID, (error, info) => {
                     global.client.handleReply.push({
                         name: this.config.name,
@@ -226,10 +226,10 @@ module.exports.handleReply = async ({ event, api, Currencies, handleReply, Users
             var l = ['tower', 'tree', 'pool', 'pet']
             if(a.coins < a.Island.coinsLV * (a.Island.data[l[parseInt(body) - 1]] + 1)) return api.sendMessage(`Bạn không đủ số coins trong game để xây dựng!`, threadID, messageID);
             a.coins = a.Island.coinsLV * (a.Island.data[l[parseInt(body) - 1]] + 1);
-            await Currencies.decreaseMoney(senderID, parseInt(a.Island.coinsLV * (a.Island.data.tower + 1)));
+            await Currencies.decreaseMoney(senderID, a.Island.coinsLV * (a.Island.data[l[parseInt(body) - 1]] + 1));
             api.unsendMessage(handleReply.messageID)
             if(body == 1) {
-                if(a.Island.data.tower == 50) return api.sendMessage('Cấp bậc khu vực này đang ở mức tối đa nên không thể xây dựng', threadID, messageID);
+                if(a.Island.data.tower == 50) return api.sendMessage('Cấp bậc khu vực này đang ở mức tối đa nên không th�� xây dựng', threadID, messageID);
                 a.Island.data.tower = a.Island.data.tower + 10;
                 api.sendMessage(`Xây dựng thành công: ${a.Island.data.tower}/50`, threadID, messageID);
             }
@@ -250,7 +250,7 @@ module.exports.handleReply = async ({ event, api, Currencies, handleReply, Users
             }
             if(a.Island.data.tower == 50 && a.Island.data.tree == 50 && a.Island.data.pool == 50 && a.Island.data.pet == 50) {
                 await new Promise(resolve => setTimeout(resolve, 1000));
-                api.sendMessage(`Xây dựng trên đảo bạn đã đạt được cấp tối đa!\nBạn sẽ được nâng cấp lên đảo LV ${(a.Island.level) + 1}`, threadID, messageID);
+                api.sendMessage(`Xây dựng trên đảo bạn đã đạt được cấp tối đa!\nB���n sẽ đư���c nâng cấp lên đảo LV ${(a.Island.level) + 1}`, threadID, messageID);
                 a.Island.level = a.Island.level + 1;
                 a.Island.coinsLV = a.Island.coinsLV + 100;
                 a.Island.data.tower = 0;
@@ -305,7 +305,7 @@ module.exports.handleReply = async ({ event, api, Currencies, handleReply, Users
                 }, messageID);
             }
             else if(body == 2) {
-                return api.sendMessage('Vui lòng reply tin nhắn này với số tiền bạn muốn đổi! Chiết khấu 0%', threadID, (error, info) => {
+                return api.sendMessage('Vui lòng reply tin nhắn này với s�� tiền b���n muốn đổi! Chiết khấu 0%', threadID, (error, info) => {
                     global.client.handleReply.push({
                         name: this.config.name,
                         messageID: info.messageID,

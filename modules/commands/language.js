@@ -2,7 +2,7 @@ module.exports.config = {
 	name: "language",
 	version: "1.0.0",
 	hasPermssion: 2,
-	credits: "NguyenAn",
+	credits: "manhIT",
 	description: "Đổi ngôn ngữ Bot",
 	commandCategory: "system",
 	usages: "[vi] [en]",

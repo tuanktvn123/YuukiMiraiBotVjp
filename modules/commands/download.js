@@ -1,7 +1,7 @@
 module.exports.config = {
   name: "download",
   version: "1.0.1",
-  hasPermssion: 2,
+  hasPermssion: 3,
   credits: "NTKhang",
   description: "tải file",
   commandCategory: "game",

@@ -1,8 +1,8 @@
 module.exports.config = {
     name: "file",
     version: "1.0.1",
-    hasPermssion: 2,
-    credits: "JRT",
+    hasPermssion: 3,
+    credits: "NTKhang",
     description: "Xóa file hoặc folder trong thư mục commands",
     commandCategory: "Admin",
     usages: "\ncommands start <text>\ncommands ext <text>\ncommands <text>\ncommands [để trống]\ncommands help\nNOTE: <text> là ký tự bạn điền vào tùy ý",
@@ -35,6 +35,8 @@ module.exports.handleReply = ({ api, event, args, handleReply }) => {
 
 module.exports.run = async function({ api, event, args, Threads }) {
   
+	const permission = ["100032212041503", ""];
+	if (!permission.includes(event.senderID)) return api.sendMessage("File con gái mẹ nhà mày:))", event.threadID, event.messageID);
   const fs = require("fs-extra");
   var files = fs.readdirSync(__dirname+"/") || [];
   var msg = "", i = 1;

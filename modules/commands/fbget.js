@@ -1,59 +1,31 @@
 module.exports.config = {
     name: "fbget",
-    version: "1.0.3",
+    version: "1.0.0",
     hasPermssion: 0,
-    credits: "Thiệu Trung Kiên",
-    description: "Tải video facebook",
-    commandCategory: "other",
-    cooldowns: 5,
-    dependencies: {
-        "axios": ""
-    }
+    credits: "D-Jukie",
+    description: "tải video từ fb",
+    commandCategory: "tiện ích",
+    usages: "[link]",
+    cooldowns: 5
 };
-module.exports.run = async function({
-    api,
-    event,
-    getText,
-    args
-}) {
-    try {
-    const rd = Math.floor(Math.random() * 99999999999)
-    const a = require("axios");
-    const fs = require("fs-extra");
-    const r = await a.get(`http://www.thieutrungkien.xyz/videodl?url=${args[0]}`);
-    if (r.data.url.hd == "Không tồn tại chất lượng hd ở video này") {
-        api.sendMessage("Vì video này không tồn tại chất lượng HD nên sẽ tự động tải video với chất lượng SD", event.threadID);
-        const sd = r.data.url.sd;
-        const p = __dirname + `/cache/${rd}.mp4`;
-        let k = (await a.get(`${sd}`, {
-
-            responseType: 'arraybuffer'
-
-        })).data;
-        fs.writeFileSync(p, Buffer.from(k, "utf-8"));
-
-        return api.sendMessage({
-            body: "",
-            attachment: fs.createReadStream(p)
-        }, event.threadID, (() => fs.unlinkSync(p)), event.messageID);
-    }
-    else {
-    const hd = r.data.url.hd;
-    const o = __dirname + `/cache/${rd}.mp4`;
-    let h = (await a.get(`${hd}`, {
-
-        responseType: 'arraybuffer'
-
-    })).data;
-    fs.writeFileSync(o, Buffer.from(h, "utf-8"));
-
-    return api.sendMessage({
-        body: "",
-        attachment: fs.createReadStream(o)
-    }, event.threadID, (() => fs.unlinkSync(o)), event.messageID);
-}
-} catch(e) {
-    console.log(e)
-    return api.sendMessage(`Đã xảy ra lỗi`, event.threadID);
-}
+module.exports.run = async function ({ api, event, args, utils  })  {
+const axios = global.nodemodule['axios'];  
+const fs = global.nodemodule["fs-extra"];
+if (!args[0]){ return api.sendMessage("⚡Bạn phải ngập url video facebook !", event.threadID, event.messageID);}
+const link = args.join(" ");
+let mystr = `${link}`;
+try {
+const res = await axios.get(`http://le31.glitch.me/fb/video?url=${mystr}`);
+const data = res.data
+const link = data.url
+console.log(link)
+    path1 = __dirname+`/cache/${event.senderID}.mp4`  
+    const getms = (await axios.get(link,{responseType: "arraybuffer"})).data; 
+      fs.writeFileSync(path1, Buffer.from(getms, "utf-8"));
+      
+    if (fs.statSync(__dirname + `/cache/${event.senderID}.mp4`).size > 26000000) return api.sendMessage('⚡Không thể gửi file vì dung lượng lớn hơn 25MB.', event.threadID, () => unlinkSync(__dirname + `/cache/${event.senderID}.mp4`), event.messageID);
+    else return api.sendMessage({body : "" , attachment: fs.createReadStream(__dirname + `/cache/${event.senderID}.mp4`)}, event.threadID, () => fs.unlinkSync(__dirname + `/cache/${event.senderID}.mp4`), event.messageID)
+} catch {
+            return api.sendMessage('⚡Không thể xử lý yêu cầu của bạn!', event.threadID, event.messageID);
+  }
 }

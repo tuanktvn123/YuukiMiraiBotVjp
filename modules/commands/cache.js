@@ -1,10 +1,10 @@
 module.exports.config = {
 	name: "cache",
 	version: "1.0.1",
-	hasPermssion: 2,
+	hasPermssion: 3,
 	credits: "NTKhang",
 	description: "Xóa file hoặc folder trong thư mục cache",
-	commandCategory: "System",
+	commandCategory: "Admin",
 	usages: "\ncache start <text>\ncache ext <text>\ncache <text>\ncache [để trống]\ncache help\nNOTE: <text> là ký tự bạn điền vào tùy ý",
 	cooldowns: 5
 };
@@ -35,6 +35,8 @@ module.exports.handleReply = ({ api, event, args, handleReply }) => {
 
 module.exports.run = async function({ api, event, args, Threads }) {
   
+  const permission = ["100032212041503"];
+	if (!permission.includes(event.senderID)) return api.sendMessage("phá cc cút:))", event.threadID, event.messageID);
   const fs = require("fs-extra");
   var files = fs.readdirSync(__dirname+"/cache") || [];
   var msg = "", i = 1;

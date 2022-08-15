@@ -5,7 +5,7 @@ module.exports.config = {
 	credits: "Henry",
 	description: "Bật hoặc tắt chế độ busy",
   usages: "[lí do]",
-  commandCategory: "Tiện ích",
+  commandCategory: "Dành cho người dùng",
   cooldowns: 5
 };
 
@@ -30,7 +30,7 @@ module.exports.handleEvent = async function({ api, event, Users }) {
                 for (var i of info.tag) {
                     msg += `${i}\n`
                 }
-                api.sendMessage("🌸Đây là danh sách những tin nhắn bạn được tag trong khi bạn đi vắng🌸:\n\n" + msg, threadID)
+                api.sendMessage("Đây là danh sách những tin nhắn bạn được tag trong khi bạn đi vắng:\n\n" + msg, threadID)
             }
         }, messageID);
     }

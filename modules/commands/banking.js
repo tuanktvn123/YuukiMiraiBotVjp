@@ -4,7 +4,7 @@ module.exports.config = {
 	credits: "HungCho & Khánh Milo",
 	description: "",
 	usages: "",
-    commandCategory: "Tiện ích",
+  commandCategory: "Tiện ích",
 	cooldowns: 0,
 	dependencies: {
         "fs-extra" : ""
@@ -127,6 +127,5 @@ module.exports.run = async function({ api, event, args }) {
         var workList = "";
 			getData.map(item => workList += `\n ${item}`);
 			return api.sendMessage(`${workList}`, event.threadID, event.messageID);
-		}
-        
+		}        
 }

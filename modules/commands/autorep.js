@@ -1,7 +1,7 @@
 module.exports.config = {
 	name: "autorep",
 	version: "1.0.0",
-	hasPermssion: 1,
+	hasPermssion: 0,
 	credits: "CThanh",
 	description: "tạo autorep cho 1 tin nhắn",
 	commandCategory: "Dành Cho Nhóm Chat",

@@ -1,47 +1,30 @@
-const request = require('request');
-const fs = require('fs')
-
+const request = require("request");
+const fs = require("fs")
+const axios = require("axios")
 module.exports.config = {
   name: "hôn",
   version: "1.0.0",
   hasPermssion: 0,
-  credits: "Hungcatmoi (fix lại by CHIP) ",
-  description: "Hôn người bạn tag",
-  commandCategory: "general",
-  usages: "hôn [tag người bạn cần Hôn]",
+  credits: "Lê Định Mod",
+  description: "hôn người Bạn Muốn",
+  commandCategory: "người dùng",
+  usages: "@tag",
   cooldowns: 5,
-  dependencies: {
-    "request": "",
-    "fs": ""
-  }
+  dependencies: {"request": "","fs": "","axios": ""}
 };
 
-module.exports.run = function({
-  api,
-  event,
-  args,
-  client,
-  __GLOBAL
-}) {
-  var out = (msg) => api.sendMessage(msg, event.threadID, event.messageID);
-  if (!args.join(" ")) return out("Bạn chưa nhập tin nhắn");
-  else
-  return request('https://nekos.life/api/v2/img/kiss', (err, response, body) => {
-    let picData = JSON.parse(body);
-    var mention = Object.keys(event.mentions)[0];
-    let getURL = picData.url;
-    let ext = getURL.substring(getURL.lastIndexOf(".") + 1);
-    let tag = event.mentions[mention].replace("@", "");
-    let callback = function() {
-      api.sendMessage({
-        body: tag + ", Yêu em nhiều lắm ❤️",
-        mentions: [{
+module.exports.run = async({api,event,args,client,Users,Threads,__GLOBAL,Currencies}) => {
+        const request = require('request')
+                const fs = require('fs')
+                  var mention = Object.keys(event.mentions)[0];
+let tag = event.mentions[mention].replace("@", "");
+        var link = [
+          "https://i.pinimg.com/originals/78/09/5c/78095c007974aceb72b91aeb7ee54a71.gif",
+             ];
+   var callback = () => api.sendMessage({body: `${tag} 💋, hun cái nè 😘` , mentions: [{
           tag: tag,
           id: Object.keys(event.mentions)[0]
         }],
-        attachment: fs.createReadStream(__dirname + `/cache/anime.${ext}`)
-      }, event.threadID, () => fs.unlinkSync(__dirname + `/cache/anime.${ext}`), event.messageID);
-    };
-    request(getURL).pipe(fs.createWriteStream(__dirname + `/cache/anime.${ext}`)).on("close", callback);
-  });
-}
+  attachment: fs.createReadStream(__dirname + "/cache/hon.gif")}, event.threadID, () => fs.unlinkSync(__dirname + "/cache/hon.gif"));
+      return request(encodeURI(link[Math.floor(Math.random() * link.length)])).pipe(fs.createWriteStream(__dirname+"/cache/hon.gif")).on("close",() => callback());
+   };

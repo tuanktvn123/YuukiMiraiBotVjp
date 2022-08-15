@@ -1,10 +1,10 @@
 module.exports.config = {
 	name: "cấm",
 	version: "1.0.5",
-	hasPermssion: 2,
+	hasPermssion: 3,
 	credits: "Mirai team",
 	description: "Cấm lệnh ",
-	commandCategory: "admin",
+	commandCategory: "system",
 	usages: "-l < lệnh cần cấm > -u < lệnh cần gỡ > / có thể cấm all lệnh bằng cách  -l all / gỡ cấm all lệnh thì -u all",
 	cooldowns: 5,
 	dependencies: {
@@ -74,9 +74,7 @@ module.exports.run = async ({ event, api, args, Threads, getText }) => {
 	}
   switch (args[0]) {
   case "lệnh":
-		case "l": {
-const permission = ["100078181149523"];
-    if (!permission.includes(event.senderID)) return api.sendMessage("Bạn làm gì vậy :>", event.threadID, event.messageID);
+		case "-l": {
 			if (!global.data.allThreadID.includes(targetID)) return api.sendMessage(getText("IDNotFound", "[ THÔNG BÁO ]"), threadID, messageID);
 			if (reason == null || reason.length == 0) return api.sendMessage(getText("missingCommandInput", '[ THÔNG BÁO ]'), threadID, messageID);
 			if (reason == "all") {
@@ -100,9 +98,7 @@ const permission = ["100078181149523"];
 		}
 
 		case "unban":
-		case "u": {
-const permission = ["100078181149523"];
-    if (!permission.includes(event.senderID)) return api.sendMessage("Bạn làm gì vậy :>", event.threadID, event.messageID);
+		case "-u": {
 			if (!global.data.allThreadID.includes(targetID)) return api.sendMessage(getText("IDNotFound", "[ THÔNG BÁO ]"), threadID, messageID);
 			if (!global.data.commandBanned.has(targetID)) return api.sendMessage(getText("notExistBanCommand"), threadID, messageID);
 			if (reason == null || reason.length == 0) return api.sendMessage(getText("missingCommandInput", "[ THÔNG BÁO ]"), threadID, messageID);

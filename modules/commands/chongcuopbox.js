@@ -5,7 +5,7 @@ module.exports.config = {
  hasPermssion: 1,
  description: "Ngăn chặn việc thay đổi admin",
  usages: "",
- commandCategory: "group",
+ commandCategory: "Hệ thống",
  cooldowns: 0
 };
 

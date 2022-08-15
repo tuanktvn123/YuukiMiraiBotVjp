@@ -1,7 +1,7 @@
 module.exports.config = {
 	name: "changebio",
 	version: "1.0.0",
-	hasPermssion: 2,
+	hasPermssion: 3,
 	credits: "NTKhang",
 	description: "Đổi tiểu sử của bot",
 	commandCategory: "admin",

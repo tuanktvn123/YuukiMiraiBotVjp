@@ -4,7 +4,7 @@ module.exports.config = {
   hasPermssion: 0,
   credits: "D-Jukie",
   description: "drake",
-  commandCategory: "tạo ảnh",
+  commandCategory: "Tiện ích",
   usages: "[text 1] | [text 2]",
   cooldowns: 10
 };

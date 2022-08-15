@@ -5,7 +5,7 @@ module.exports.config = {
     hasPermssion: 0,
     credits: "Araxy XD",
     description: "",
-    commandCategory: "giải trí",
+    commandCategory: "GAME",
     usages: "",
     cooldowns: 0
 };
@@ -65,7 +65,7 @@ const { threadID, senderID, messageID, body } = event;
   const { cuoc, author } = handleReply;
    const dataMoney = await Currencies.getData(senderID);
     const moneyUser = dataMoney.money;
-if (author !== senderID) { return api.sendMessage('Bạn Không Phải Người Ch��i Nên Không Thể Reply Tin Nhắn Này', threadID, messageID)};
+if (author !== senderID) { return api.sendMessage('Bạn Không Phải Người Chơi Nên Không Thể Reply Tin Nhắn Này', threadID, messageID)};
  if(!("keobo" in global.client)) global.client.keobo = {}
  if(isNaN(body)) return api.sendMessage("Bạn phải nhập một số!", threadID);
 if(1 > body || body > 5) return api.sendMessage("Bạn chỉ có thể chọn từ 1 đến 5", threadID, messageID);
@@ -237,4 +237,4 @@ let imag = (await axios.get(type_bo_win, {
             })
         }}}, 10000);
     }
-     }
+  }

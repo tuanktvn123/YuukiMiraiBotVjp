@@ -4,7 +4,7 @@ module.exports.config = {
   hasPermssion: 0,
   credits: "Bảo Luân",
   description: "Oh là cheem đó",
-  commandCategory: "tạo ảnh",
+  commandCategory: "Tiện ích",
   usages: "[text 1] | [text 2] | [text 3] | [text 4]",
   cooldowns: 10
 };

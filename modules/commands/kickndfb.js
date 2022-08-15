@@ -4,7 +4,7 @@ module.exports.config = {
 	hasPermssion: 1,
 	credits: "ProCoderMew",
 	description: "Lọc người dùng Facebook",
-	commandCategory: "tiện ích",
+	commandCategory: "Nhóm",
 	usages: "",
 	cooldowns: 300
 };

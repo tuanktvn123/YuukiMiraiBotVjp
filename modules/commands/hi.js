@@ -1,10 +1,10 @@
 module.exports.config = {
 	name: "hi",
 	version: "1.0.1",
-	hasPermssion: 0,
+	hasPermssion: 2,
 	credits: "ManhG",
 	description: "",
-	commandCategory: "noprefix",
+	commandCategory: "Other",
 	usages: "",
 	cooldowns: 0,
 	denpendencies: {
@@ -34,17 +34,17 @@ module.exports.handleEvent = async ({
 	function out(data) {
 		api.sendMessage(data, threadID, messageID)
 	}
-	//trả lời
+	//trả lời
 	var msg = {
-		body: `Chào ${name}, chúc bạn một ngày tốt lành ❤️`,
+		body: `💘Hiii chào cậu ${name}💖. Chúc bạn có 1 ngày mới tốt lành❤`,
 		attachment: (await global.nodemodule["axios"]({
-			url: (await global.nodemodule["axios"]('https://Api-vip.thanhnhu2.repl.co/gaibox')).data.data,
+			url: (await global.nodemodule["axios"]('https://apikanna.change-itit.repl.co')).data.data,
 			method: "GET",
 			responseType: "stream"
 		})).data
 	}
 	// Gọi bot
-	var arr = ["hi", "hello", "lô", "hí lô", "chào","Hi","Chào"];
+	var arr = ["hi", "hello", "lô", "hí lô", "chào", "hăi", "hí", "hai", "2"];
 	arr.forEach(i => {
 		let str = i[0].toUpperCase() + i.slice(1);
 		if (body === i.toUpperCase() | body === i | str === body) return out(msg)
@@ -54,7 +54,7 @@ module.exports.handleEvent = async ({
 module.exports.languages = {
 	"vi": {
 		"on": "Bật",
-		"off": "Tắt",
+		"off": "Tắt",
 		"successText": "hi thành công",
 	},
 	"en": {

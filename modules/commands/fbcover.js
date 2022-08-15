@@ -1,91 +1,119 @@
 module.exports.config = {
-	name: "fbcover", // Tên lệnh, được sử dụng trong việc gọi lệnh
-	version: "1.0.0", // phiên bản của module này
-	hasPermssion: 0, // Quyền hạn sử dụng, với 0 là toàn bộ thành viên, 1 là quản trị viên trở lên, 2 là admin/owner
-	credits: "DungUwU", // Công nhận module sở hữu là ai
-	description: "blah blah blha", // Thông tin chi tiết về lệnh
-	commandCategory: "Tạo ảnh", // Thuộc vào nhóm nào: system, other, game-sp, game-mp, random-img, edit-img, media, economy, ...
-	usages: "",
-	cooldowns: 5
+  name: "fbcover",
+  version: "1.0.1",
+  hasPermssion: 0,
+  credits: "chinhle",
+  description: "Tạo ra một avt trên taoanhdep.",
+  commandCategory: "tạo ảnh",
+  cooldowns: 0,
+  dependencies: {
+      "fs-extra": "",
+      "request": "",
+      "axios": ""
+  }
 };
 
-module.exports.handleReply = async ({ api, event, handleReply }) => {
-	const { threadID, messageID, senderID, body } = event;
-	if (handleReply.content.id != senderID) return;
-	const input = body.trim();
-	const sendC = (msg, step, content) => api.sendMessage(msg, threadID, (err, info) => {
-		global.client.handleReply.splice(global.client.handleReply.indexOf(handleReply), 1);
-		api.unsendMessage(handleReply.messageID);
-		global.client.handleReply.push({
-			step: step,
-			name: this.config.name,
-			messageID: info.messageID,
-			content: content
-		})
-	}, messageID);
-	const send = async (msg) => api.sendMessage(msg, threadID, messageID);
-
-	let content = handleReply.content;
-	switch (handleReply.step) {
-		case 1:
-			content.name = input;
-			sendC("Reply tin nhắn này tên đệm của bạn", 2, content);
-			break;
-		case 2:
-			content.subname = input;
-			sendC("Reply tin nhắn này số điện thoại của bạn", 3, content);
-			break;
-		case 3:
-			content.number = input;
-			sendC("Reply tin nhắn này email của bạn", 4, content);
-			break;
-		case 4:
-			content.email = input;
-			sendC("Reply tin nhắn này địa chỉ của bạn", 5, content);
-			break;
-		case 5:
-			content.address = input;
-			sendC("Reply tin nhắn này màu bạn muốn chọn", 6, content);
-			break;
-		case 6:
-			content.color = input;
-			const axios = require("axios");
-			const fs = require("fs");
-			send("Thông tin đã được ghi nhận, vui lòng đợi trong giây lát!");
-			global.client.handleReply.splice(global.client.handleReply.indexOf(handleReply), 1);
-			api.unsendMessage(handleReply.messageID);
-			let c = content;
-			let res = await axios.get(encodeURI(`https://www.phamvandienofficial.xyz/fbcover/v1?name=${c.name}&uid=${c.id}&address=${c.address}&email=${c.email}&subname=${c.subname}&sdt=${c.number}&color=${c.color}`), { responseType: "arraybuffer" })
-				.catch(e => { return send("Lỗi không xác định, liên hệ admin để fix") });
-			if (res.status != 200) return send("Đã có lỗi xảy ra, vui lòng thử lại sau!");
-			let path = __dirname + `/cache/fbcoverv1__${senderID}.png`;
-			fs.writeFileSync(path, Buffer.from(res.data, "utf-8"));
-			send({
-				body: 'Ảnh của bạn đây',
-				attachment: fs.createReadStream(path)
-			}).then(fs.unlinkSync(path));
-			break;
-		default:
-			break;
-	}
+module.exports.run = async function ({ api, args, event, permssion , handleReply}) {
+const request = require('request');
+const fs = require("fs-extra")
+const axios = require("axios")
+const { threadID, messageID, senderID, body } = event;
+if (args[0] == "list") {
+const list = await axios.get("https://api.truccuche27042004.repl.co/taoanhdep/list/");
+    var page = 1;
+    page = parseInt(args[1]) || 1;
+    page < -1 ? page = 1 : "";
+    var limit = 15;
+    var count = list.data.listAnime.length;
+    var numPage = Math.ceil(count / limit);
+    var msg = [];
+    for (var i = limit * (page - 1); i < limit * (page - 1) + limit; i++) {
+      if (i >= count) break;
+      var nv = list.data.listAnime[i].name;
+      msg += `${i + 0}. ${nv}\n`
+    }
+    msg += `Hiện tại có ${count} nhân vật\nSố trang (${page}/${numPage})\nDùng ${global.config.PREFIX}fbcover list <số trang>`;
+    return api.sendMessage(msg, event.threadID)
+ }
+  else if (senderID == api.getCurrentUserID()) return;
+api.sendMessage(`Reply tin nhắn để chọn nhân vật`,event.threadID, (err, info) => {
+     return global.client.handleReply.push({
+        type: "characters",
+        name: this.config.name,
+        author: senderID,
+        tenchinh: args.join(" ").toUpperCase(),
+        messageID: info.messageID
+      });
+  },event.messageID);
 }
+module.exports.handleReply = async function({ api, event, args, handleReply, client, __GLOBAL, Threads, Users, Currencies }) {
+    const axios = require("axios");
+    const fs = require("fs-extra");
+    const request = require("request");
+    var info = await api.getUserInfo(event.senderID);
+    var nameSender = info[event.senderID].name;
+    var arraytag = [];
+        arraytag.push({id: event.senderID, tag: nameSender});
+    if (handleReply.author != event.senderID) return;
+    const {
+        threadID,
+        messageID,
+        senderID
+    } = event;
 
-module.exports.run = ({ api, event, args }) => {
-	const { threadID, messageID, senderID } = event;
-	return api.sendMessage("Reply tin nhắn này tên của bạn", event.threadID, (err,info) => {
-		global.client.handleReply.push({
-			step: 1,
-			name: this.config.name,
-			messageID: info.messageID,
-			content: {
-				id: senderID,
-				name: "",
-				subname: "",
-				number: "",
-				email: "",
-				address: "",
-				color: ""
-			}
-		})
-	}, event.messageID);
+    switch (handleReply.type) {
+        case "characters": { 
+        	api.unsendMessage(handleReply.messageID);
+        	return api.sendMessage(`🔍Bạn đã chọn ID nhân vật là ${event.body}\n(Reply tin nhắn này nhập vào tên chính của bạn)`,threadID , function (err, info) { 
+        	  return global.client.handleReply.push({ 
+        	  	type: 'subname',
+        	  	name: 'fbcover',
+        	  	author: senderID,
+        	  	characters: event.body,
+        	  	messageID: info.messageID
+        	  })
+        	}, messageID);
+        }
+        case "subname": { 
+        	api.unsendMessage(handleReply.messageID);
+        	return api.sendMessage(`🔍Bạn đã chọn tên chính là ${event.body}\n(Reply tin nhắn này nhập vào tên phụ của bạn)`,threadID , function (err, info) { 
+        		return global.client.handleReply.push({ 
+        			type: 'color',
+        			name: 'fbcover',
+        			author: senderID,
+        			characters: handleReply.characters,
+        			name_s: event.body,
+        			messageID: info.messageID
+        		})
+        	}, messageID);
+        }
+        case "color": { 
+        	api.unsendMessage(handleReply.messageID);
+        	return api.sendMessage(`🔍Bạn đã chọn tên phụ là ${event.body}\nNhập màu nền của bạn (lưu ý: nhập tên tiếng anh của màu - Nếu không muốn nhập màu thì nhập "no")\n(Reply tin nhắn này)`,threadID , function (err, info) {
+        		return global.client.handleReply.push({ 
+        			type: 'create',
+        			name: 'fbcover',
+        			author: senderID,
+        			characters: handleReply.characters,
+        			subname: event.body,
+        			name_s: handleReply.name_s,
+        			messageID: info.messageID
+        		})
+        	}, messageID)
+        }
+        case "create": {
+            var nhanvat = handleReply.characters;
+            var name = handleReply.name_s;
+            var color = event.body;
+            var subname = handleReply.subname;
+            api.unsendMessage(handleReply.messageID);
+            api.sendMessage(`⏳ Đang khởi tạo chương trình tạo ảnh!`,threadID, (err, info) => {
+            setTimeout(() => {
+            	api.unsendMessage(info.messageID);
+            	var callback = () => api.sendMessage({body:`Đây là ảnh bìa của ${nameSender}\nMã số nhân vật: ${nhanvat}\nTên chính: ${name}\nTên phụ: ${subname}\nMàu nền: ${color}`,mentions: arraytag,attachment: fs.createReadStream(__dirname + "/cache/fbcover.png")}, event.threadID, () => fs.unlinkSync(__dirname + "/cache/fbcover.png"),event.messageID);
+                return request(encodeURI(`https://api.truccuche27042004.repl.co/fbcover/v2?name=${name}&id=${nhanvat}&subname=${subname}&color=${color}`)).pipe(fs.createWriteStream(__dirname + '/cache/fbcover.png')).on('close', () => callback());
+            }, 1000);
+          }, messageID);
+        }
+    }
 }
