@@ -1,21 +1,41 @@
 module.exports.config = {
-    name: "age",
-    version: "1.0.0",
-    hasPermssion: 0,
-    credits: "DuyVuong",
-    description: "máy tính tuổi cho bạn",
-    commandCategory: "game",
-    cooldowns: 5
+	name: "age", // Tên lệnh, được sử dụng trong việc gọi lệnh
+	version: "1.0.0", // phiên bản của module này
+	hasPermssion: 0, // Quyền hạn sử dụng, với 0 là toàn bộ thành viên, 1 là quản trị viên trở lên, 2 là admin/owner
+	credits: "Senproject", // Công nhận module sở hữu là ai
+	description: "test", // Thông tin chi tiết về lệnh
+	commandCategory: "Dành cho admin", // Thuộc vào nhóm nào: system, other, game-sp, game-mp, random-img, edit-img, media, economy, ...
+	usages: "", // Cách sử dụng lệnh
+	cooldowns: 5, // Thời gian một người có thể lặp lại lệnh
+	dependencies: {
+		"axios": "",
+	}
 };
 
-module.exports.run = async function({ event, api, Users, args }) {
-let axios = require('axios')
-let { threadID, senderID, messageID } = event;
-var cc = args.join(" ");
-if(args.length == 0)  api.sendMessage("Sai Format\nVí dụ: 19/01/2004 => 19/01/2300",threadID,messageID)
-else {
-    let res = await axios.get(encodeURI(`https://le31.glitch.me/age?q=${cc}`));
-    console.log(res.data.data)
-   return api.sendMessage(`==== Máy tính tuổi ====\n${res.data.data}`,threadID,messageID);
-}
-}
+
+module.exports. run = async function({ api, event, args }) {
+  const axios = require("axios");
+  const date = (args[0] || "").split('/');
+  if (date.length < 3) return api.sendMessage('Vui lòng nhập ngày tháng năm hợp lệ theo định dạng DD/MM/YYYY', event.threadID, event.messageID);
+  axios.get('https://goatbot.tk/taoanhdep/age', {
+    params: {
+      day: date[0],
+      month: date[1],
+      year: date[2],
+      apikey: "xksatvansyvahsh"
+    },
+    responseType: "stream"
+  })
+  .then(response => {
+    api.sendMessage({
+      attachment: response.data
+    }, event.threadID, event.messageID);
+  })
+  .catch(error => {
+    if ((error).response) error.response.data.on("data", function(e) {
+      const err = JSON.parse(e);
+      api.sendMessage(`Đã xảy ra lỗi ${err.name}: ${err.message}`, event.threadID, event.messageID);
+    });
+    else api.sendMessage(`Đã xảy ra lỗi ${error.name}: ${error.message}`, event.threadID, event.messageID);
+  });
+};

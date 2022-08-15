@@ -1,12 +1,12 @@
 module.exports.config = {
-	name: "advice",
+	name: "advic",
 	version: "1.0.1",
 	hasPermssion: 0,
 	credits: "NTKhang",
 	description: "Đưa ra ngẫu nhiên cho bạn 1 lời khuyên",
-	commandCategory: "health",
+	commandCategory: "game",
 	usages: "advice",
-	cooldowns: 5,
+	cooldowns: 0,
 	dependencies: {"srod-v2": "","request": ""}
 };
 
