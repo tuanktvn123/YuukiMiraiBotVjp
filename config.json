@@ -13,8 +13,7 @@
     "BOTNAME": "",
     "PREFIX": "!",
     "ADMINBOT": [
-        "USERID1",
-        "USERID2"
+        "100007704346822"
     ],
     "DATABASE": {
         "sqlite": {
